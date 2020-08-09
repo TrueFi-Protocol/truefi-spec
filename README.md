@@ -10,14 +10,14 @@ waffle
 
 ## Terminology
 
-**token** - an ERC20 token running on the Ethereum blockchain. 
-**stablecoin** - a token which is pegged to another asset
-**defi** - decentralized finance using smart contracts. 
-**pool** - a smart contract which allows accounts to pool tokens with the goal of earning interest. 
-**deposit tokens** - tokens deposited into a pool which are used to earn interest through lending or arbitrage opportunities. 
-**pool tokens** - tokens issued by a pool to represent share in the pool's deposit tokens. 
-**TrustToken** - an ERC20 token used to provide utility in the TrueFi ecosystem. 
-**TrueUSD** - a stablecoin used frequently in TrueFi to provide liquidity. 
+**token** - an ERC20 token running on the Ethereum blockchain.  
+**stablecoin** - a token which is pegged to another asset.  
+**defi** - decentralized finance using smart contracts.  
+**pool** - a smart contract which allows accounts to pool tokens with the goal of earning interest.  
+**deposit tokens** - tokens deposited into a pool which are used to earn interest through lending or arbitrage opportunities.  
+**pool tokens** - tokens issued by a pool to represent share in the pool's deposit tokens.  
+**TrustToken** - an ERC20 token used to provide utility in the TrueFi ecosystem.  
+**TrueUSD** - a stablecoin used frequently in TrueFi to provide liquidity.
 
 ## TrueFiPool 
 
