@@ -1,54 +1,66 @@
-# TrueFi
+# TrueFi Specification
+TrueFi is a protocol for creating interest bearing pools with a high APR for liquidity providers. TrueFi includes a staking mechanism using TrustTokens (TRU) and rewards stakers for keeping stable, high APRs. Un-collateralized loans and decentralized lending are utilized in order to achieve high interest rates for pools. 
 
-TrueFi is a protocol for creating interest bearing pools with a high APR for liquidity providers. TrueFi includes a staking mechanism using TrustTokens (TRU) and rewards stakers for keeping stable, high APR. Under-collateralized loans and smart contract pools are utilized in order to achieve high interest rates for pools.
-
-## Setup
-```
-yarn install
-waffle
-```
+TrueFi is a product that we are actively designing and this document is intended to act as a plan and specification for design. We are aiming to launch TrueFi on the Ethereum mainnet by the end of November 2020.
 
 ## Terminology
 
-**token** - an ERC20 token running on the Ethereum blockchain.  
-**stablecoin** - a token which is pegged to another asset.  
-**defi** - decentralized finance using smart contracts.  
-**pool** - a smart contract which allows accounts to pool tokens with the goal of earning interest.  
-**deposit tokens** - tokens deposited into a pool which are used to earn interest through lending or arbitrage opportunities.  
-**pool tokens** - tokens issued by a pool to represent share in the pool's deposit tokens.  
-**TrustToken** - an ERC20 token used to provide utility in the TrueFi ecosystem.  
-**TrueUSD** - a stablecoin used frequently in TrueFi to provide liquidity.
+**Token** - An ERC20 token running on the Ethereum blockchain.
+**Stablecoin** - A token which is pegged to another asset.  
+**DeFi** - Decentralized finance using smart contracts.  
+**Pool** - A smart contract which allows accounts to pool tokens with the goal of earning interest.  
+**Deposit Tokens** - Tokens deposited into a pool which are used to earn interest through lending or arbitrage opportunities.  
+**Pool Tokens** - Tokens issued by a pool to represent share in the pool's deposit tokens.  
+**TrustToken** - An ERC20 token used to provide utility in the TrueFi ecosystem.  
+**TrueUSD** - A stablecoin used frequently in TrueFi to provide liquidity.
 
-## TrueFiPool 
+# Background
 
-A TrueFiPool is an ERC20 contract with additional functions to support providing liquidity and staking TrustTokens.
+While a lot of DeFi’s success so far has been built on collateralized lending (Compound, AAVE, etc.), many people on the cutting edge of DeFi see that for DeFi to get to its next level of success, it will need to be able to tap into un-collateralized lending as well. Innovative projects such as AAVE are already making moves in this direction. 
 
-### TrueFiPool Functions
+Reputable institutions and crypto hedge funds funds such as Alameda, Three Arrows, etc. are offering 8-12% for large un-collateralized loans. These rates are higher than what’s available in DeFi today, primarily because DeFi today does almost exclusively collateralized lending (which borrowers will systematically pay less for) 
 
-**value()** 
-- returns the value of one pool token
+Most individual investors do not have access to invest in funds of this type because their check-size is too small. Many of these funds are only interested in loans of $1mm at the very minimum.
+By keeping un-deployed capital in DeFi, TrueFi can offer an interest rate that is at least as high as the highest rate available in DeFi today. It will only make loans when the proposed rate exceeds this rate. 
 
-**join(amount)**
-- called to join a TrueFi pool by depositing an amount of deposit tokens and minting pool tokens 
-1. transfer deposit tokens from sender 
-2. mint pool tokens to sender equal to amount of deposit tokens 
+TrueFi can use TrustToken incentive rewards to bootstrap growth similar to how Compound used $COMP
+Down the road, TrueFi can expand to a wide set of borrowers as its systems for assessing and managing risk get more sophisticated
 
-**exit(amount)** 
-- called to exit a TrueFi pool by burning pool tokens in exchange for deposit tokens 
-1. transfer pool tokens from sender and burn 
-2. transfer deposit tokens to sender based on amount of pool tokens burned 
+# LoanToken
 
-**stake(amount)**
-- stake TRU on a pool
+A LoanToken is an ERC20 contract which represents the lender share of an under-collateralized loan. LoanTokens are an important building block of TrueFi, as they can operate independently from the TrueFi pools. Creating a LoanToken requires a borrower address, principal loan amount, loan length, and interest rate.
 
-**unstake(amount)**
-- unstake TRU from a pool
+## LoanToken Lifecycle
 
-## LoanToken 
+#### I. Fundraising
+    - Mint/Burn Loan Tokens is enabled
+    - Depositors can send deposit tokens to contract
+        -> mint LoanTokens equal to deposit
+    - Can never deposit more than the principal
+        -> Return amount over principal if sending more than principal
+    - Fundraising is complete once we reach principal amount
+    - During fundraising, can exchange LoanTokens for deposit tokens
+        -> Funds aren't locked until Lending Phase
 
-A LoanToken is an ERC20 contract which represents lender share of an under-collateralized loan. Creating a loan requires a borrower address, principal loan amount, loan length, and interest rate.
+#### II. "Approval"
+    - Once smart contract has raised the principal amount of deposit tokens:
+        -> Borrower can call a function to approve the loan
+        -> Approving the loan withdraws funds to borrower address
+        -> Loan expiry is set to: block.timestamp + length
+        -> Mint/Burning Loan tokens is disabled
 
-### LoanToken Functions
+#### III. "Lending"
+    - Here we're waiting for block timestamp > expiry
+    - Mint/Burning Loan tokens is disabled
+    - Borrower can pay back deposit tokens at any time (but cannot withdraw)
+
+#### IIII. "Complete"
+    - Once block timestamp > expiry, we enter the complete phase
+    - Burning enabled (Minting disabled)
+    - LoanTokens can be burned in exchange for a share of the deposit tokens in contract
+    - Ideally borrower would have paid back (principal + principal * rate)
+
+## LoanToken Functions
 
 **constructor(borrower, principal, length, rate)**
 - create a new loan opportunity
@@ -76,3 +88,53 @@ A LoanToken is an ERC20 contract which represents lender share of an under-colla
 **pay()**
 - pay back loan by transferring deposit tokens to pool
 - can only be called once loan is active
+
+# TrueFi Pools
+
+A TrueFiPool is an ERC20 contract with additional functions to support providing liquidity and staking TrustTokens. TrueFi Pools are another building block of TrueFi, allowing pool depositors to receive pool tokens which represent their share of a pool.
+
+### TrueFiPool Functions
+
+**value()** 
+- returns the value of one pool token
+
+**join(amount)**
+- called to join a TrueFi pool by depositing an amount of deposit tokens and minting pool tokens 
+1. transfer deposit tokens from sender
+2. mint pool tokens to sender equal to amount of deposit tokens 
+
+**exit(amount)** 
+- called to exit a TrueFi pool by burning pool tokens in exchange for deposit tokens 
+1. transfer pool tokens from sender and burn 
+2. transfer deposit tokens to sender based on amount of pool tokens burned 
+
+**stake(amount)**
+- stake TRU on a pool
+
+**unstake(amount)**
+- unstake TRU from a pool
+
+# Planned TrueFi Pools
+
+## Pool 0
+Pool 0 will be the first TrueFi pool which simply exposes depositors to the curve.fi pool. Pool 0 will be used to beta test TrueFi and liquidity mining.
+
+## Pool 1: Un-collateralized Lending Pool
+Pool 1 is a TrueFi pool which exposes depositors to un-collateralized loans. A select set of institutional borrowers will be chosen for this pool in order to keep the pool initially secure. Borrower addresses will be whitelisted and will be the only addresses which can request loans.
+
+#### Applying for a loan
+
+Depositors deposit TrueCurrencies into a pool. Borrowers can submit proposals to borrow capital from the pool. They submit how much capital they want, the % APR, the term, and the Ethereum address to send the capital to if the proposal is approved. 
+
+#### Approving a loan
+
+Loan proposals proposals are voted on by TrustToken holders. Voting YES on a proposal stakes your TrustTokens on that loan and exposes you to upside & downside from it. If a proposal is approved, the capital is given as an un-collateralized loan to the borrower
+The borrower must return the capital before the term is up. If they return the full amount including interest, TrustToken voters that voted YES on the proposal receive a reward. If they fail to return the full amount including interest, TrustToken voters that voted YES on the proposal will have some of their TrustTokens burned.  Capital that is not actively being loaned out will be used to provide liquidity in safe, high-interest rate defi smart contracts (such as Aave or curve.fi).
+
+#### Paying back a loan
+
+A borrower can pay back their loan at any time before the expiry date. Borrowers are expected to pay back principal + (principal * interest).
+
+#### Withdrawing funds after loan expiry
+
+Once a loan is past its expiry date, a function will allow LoanTokens held by the pool will be exchanged for the underlying deposit tokens. Assuming a loan is paid back in full, the amount of deposit tokens will be the principal amount plus interest.
