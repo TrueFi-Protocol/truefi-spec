@@ -138,3 +138,57 @@ A borrower can pay back their loan at any time before the expiry date. Borrowers
 #### Withdrawing funds after loan expiry
 
 Once a loan is past its expiry date, a function will allow LoanTokens held by the pool will be exchanged for the underlying deposit tokens. Assuming a loan is paid back in full, the amount of deposit tokens will be the principal amount plus interest.
+
+### Loan Parameters
+
+Pool #1 will have several initial parameters:
+
+- Minimum loan size: 1M TUSD
+- Maximum loan size: 10M TUSD
+- Minimum % APR: 10%
+- Maximum % APR: 20%
+- Minimum Term: 30 days
+- Maximum Term: 90 days
+- Assets: TUSD only
+- Idle Funds usage: 100% CRV
+
+# TRU Liquidity Mining
+
+39% of TRU will be distributed to liquidity providers (LPs) over 4 years. The TRU intended to be distributed to LPs will be sent to a smart contract which is owned by a multisig. The multisig will have control over the smart contract, otherwise the tokens cannot be spent. The multisig can approve transfers to smart contracts which will hold funds for liquidity mining.
+
+## Distribution
+
+There will be two types of distributions: one for providing liquidity on external market making protocols, and one for providing liquidity on TrueFi. These will be handled with similar but slightly different mechanisms.
+
+To farm TRU by providing liquidity outside of TrueFi, LP tokens need to be staked in exchange for farm tokens (see below). Holders of farm tokens can claim rewards in TRU as incentive for providing liquidity on external markets. Markets considered are:
+
+- Uniswap V2 LP Tokens
+- Balancer LP Tokens (90% TUSD / 10% TRU)
+- yTUSD (yEarn TUSD Vault) [Risky]
+- yCRV (yEarn CRV Vault) [Risky]
+- curve.fi/y LP Tokens
+
+To farm TRU by providing liquidity within TrueFi, accounts will simply deposit tokens into one of the TrueFi pools. In addition to providing liquidity, TRU holders can stake TRU and vote to approve/disapprove loans within the LendingPool. Ways to farm TRU on TruFi include:
+
+- Providing Liquidity on Pool #1
+- Staking TRU on Pool #1
+- Voting to approve/deny loans in Pool #1
+
+#### TrueFi LendingPool Staking
+- 50% over 4 years
+- Distributed largely to successful loans
+- Distribute small reward for any vote
+- Small portion of interest on successful loans rewarded to TrueFi stakers
+- TRU burned on failed loans
+
+## Farm Token
+
+Farm tokens are tokens which represent stake in the TRU liquidity mining program. LP tokens such as pool tokens, Uniswap LP tokens, etc. can be staked in exchange for farm tokens. Holders of farm tokens will be able to claim TRU rewards for holding these tokens. Farm tokens are minted by transferring LP tokens to a smart contract, and farm tokens are burned in exchange for the underlying LP tokens plus TRU rewards.
+
+## TrueFi Pool Tokens
+
+Holders of TrueFi Pool tokens will automatically earn TRU for holding their tokens. The pool token distribution will be the largest for active voters within the Lending Pool (Pool #1)
+
+## Future Incentives & Considerations
+
+Because TRU distribution will eventually run out, an alternative to reward voters on successful loans could be to award a percentage of the loan interest to stakers, thus creating an incentive to continue voting after TRU is distributed. Another option could be to introduce an inflationary model.
