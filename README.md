@@ -174,13 +174,6 @@ To farm TRU by providing liquidity within TrueFi, accounts will simply deposit t
 - Staking TRU on Pool #1
 - Voting to approve/deny loans in Pool #1
 
-#### TrueFi LendingPool Staking
-- 50% over 4 years
-- Distributed largely to successful loans
-- Distribute small reward for any vote
-- Small portion of interest on successful loans rewarded to TrueFi stakers
-- TRU burned on failed loans
-
 ## Farm Token
 
 Farm tokens are tokens which represent stake in the TRU liquidity mining program. LP tokens such as pool tokens, Uniswap LP tokens, etc. can be staked in exchange for farm tokens. Holders of farm tokens will be able to claim TRU rewards for holding these tokens. Farm tokens are minted by transferring LP tokens to a smart contract, and farm tokens are burned in exchange for the underlying LP tokens plus TRU rewards.
