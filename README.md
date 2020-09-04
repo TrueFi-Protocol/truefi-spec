@@ -139,7 +139,7 @@ A borrower can pay back their loan at any time before the expiry date. Borrowers
 
 Once a loan is past its expiry date, a function will allow LoanTokens held by the pool will be exchanged for the underlying deposit tokens. Assuming a loan is paid back in full, the amount of deposit tokens will be the principal amount plus interest.
 
-### Loan Parameters
+### Pool Parameters
 
 Pool #1 will have several initial parameters:
 
