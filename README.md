@@ -23,8 +23,7 @@ Reputable institutions and crypto hedge funds funds such as Alameda, Three Arrow
 Most individual investors do not have access to invest in funds of this type because their check-size is too small. Many of these funds are only interested in loans of $1mm at the very minimum.
 By keeping un-deployed capital in DeFi, TrueFi can offer an interest rate that is at least as high as the highest rate available in DeFi today. It will only make loans when the proposed rate exceeds this rate. 
 
-TrueFi can use TrustToken incentive rewards to bootstrap growth similar to how Compound used $COMP
-Down the road, TrueFi can expand to a wide set of borrowers as its systems for assessing and managing risk get more sophisticated
+TrueFi can use TrustToken incentive rewards to bootstrap growth similar to how Compound used $COMP. Down the road, TrueFi can expand to a wide set of borrowers as its systems for assessing and managing risk get more sophisticated.
 
 # LoanToken
 
