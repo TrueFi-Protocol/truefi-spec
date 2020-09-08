@@ -27,7 +27,7 @@ TrueFi can use TrustToken incentive rewards to bootstrap growth similar to how C
 
 # LoanToken
 
-A LoanToken is an ERC20 contract which represents the lender share of an under-collateralized loan. LoanTokens are an important building block of TrueFi, as they can operate independently from the TrueFi pools. Creating a LoanToken requires a borrower address, principal loan amount, loan length, and interest rate.
+A LoanToken is an ERC20 contract which represents the lender share of an uncollateralized loan. LoanTokens are an important building block of TrueFi, as they can operate independently from the TrueFi pools. Creating a LoanToken requires a borrower address, principal loan amount, loan length, and interest rate.
 
 ## LoanToken Lifecycle
 
