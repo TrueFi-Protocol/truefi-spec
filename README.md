@@ -173,7 +173,6 @@ Pool #1 will have several initial parameters:
 - Minimum ratio YES votes required to pass: 0.7
 - TRU default burn factor: 80%
 
-
 ### Lending Pool Behavior
 - Whitelist borrowers
 - Borrowers deploy loan token with Loan Parameters
@@ -196,12 +195,12 @@ R = (TUSD paid in interest) * (fraction of incentive distribution TRU remaining)
 Split R proportionally based on the loan stakers
 distribute TRU over time, not just at end of loan
    
-- Staking YES:
-    -> If the loan is paid back fully: you get x% increase on your staked TRU where x = the % interest paid
-    -> If the loan defaults: 80% TRU are burned
-- Staking NO:
-    -> If the loan defaults: you get 100% increase on your staked TRU (you double up)
-    -> If loan paid back: your TRU is returned
+#### Staking YES:
+- If the loan is paid back fully: you get x% increase on your staked TRU where x = the % interest paid
+- If the loan defaults: 80% TRU are burned
+#### Staking NO:
+- If the loan defaults: you get 100% increase on your staked TRU (you double up)
+- If loan paid back: your TRU is returned
 
 # TRU Distribution
 
