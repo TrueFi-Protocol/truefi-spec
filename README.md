@@ -1,7 +1,7 @@
 # TrueFi Specification
 TrueFi is a protocol for creating interest bearing pools with a high APR for liquidity providers. TrueFi includes a staking mechanism using TrustTokens (TRU) and rewards stakers for keeping stable, high APRs. Un-collateralized loans and decentralized lending are utilized in order to achieve high interest rates for pools. 
 
-TrueFi is a product that we are actively designing and this document is intended to act as a plan and specification for design. We are aiming to launch TrueFi on the Ethereum mainnet by the end of November 2020.
+TrueFi is a product that we are actively designing and this document is intended to act as a plan and specification for design. We are aiming to launch TrueFi on the Ethereum mainnet in November 2020.
 
 ## Terminology
 
