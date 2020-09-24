@@ -151,6 +151,58 @@ Pool #1 will have several initial parameters:
 - Assets: TUSD only
 - Idle Funds usage: 100% CRV
 
+# Voting Specification
+#### LoanToken Parameters
+- rate (APY)
+- term
+- amount
+- borrower
+
+#### Lending Pool functions
+- voteFor()
+- voteAgainst()
+- processLoan()
+- registerLoan()
+
+#### Lending Pool Parameters: 
+- Minimum Loan Size: 1M TUSD
+- Maximum Loan Size: 10M TUSD
+- Minimum APY: 10%
+- Minimum TRU voted YES required to approve a loan: loan size in TUSD * factor
+    -> initial factor is 0.7
+- Minimum ratio YES votes required to pass: 0.7
+- TRU default burn factor: 80%
+
+
+### Lending Pool Behavior
+- Whitelist borrowers
+- Borrowers deploy loan token with Loan Parameters
+- Window of time where borrowers
+- Window of time where TRU holders can vote
+- When a loan is approved, the TRU voted on it is staked
+    -> voting yes stakes TRU for
+    -> voting no stakes TRU against
+- Loans not approved refunds TRU
+- Proposals can be revoked by borrower
+
+### Loan Voting Lifecycle V1
+- Borrowers can apply for loans at any time
+- When borrowers apply, this opens a 7 day process where TRU holders can vote
+- After 7 days, a loan is approved/denied and funds are sent out
+- Borrowers can cancel at any time
+
+## TRU Staking Rewards:
+R = (TUSD paid in interest) * (fraction of incentive distribution TRU remaining)
+Split R proportionally based on the loan stakers
+distribute TRU over time, not just at end of loan
+   
+- Staking YES:
+    -> If the loan is paid back fully: you get x% increase on your staked TRU where x = the % interest paid
+    -> If the loan defaults: 80% TRU are burned
+- Staking NO:
+    -> If the loan defaults: you get 100% increase on your staked TRU (you double up)
+    -> If loan paid back: your TRU is returned
+
 # TRU Distribution
 
 39% of TRU will be distributed to liquidity providers (LPs) over 4 years. The TRU intended to be distributed to LPs will be sent to a smart contract which is owned by a multisig. The multisig will have control over the smart contract, otherwise the tokens cannot be spent. The multisig can approve transfers to smart contracts which will hold funds for liquidity mining.
