@@ -105,13 +105,7 @@ A TrueFiPool is an ERC20 contract with additional functions to support providing
 **exit(amount)** 
 - called to exit a TrueFi pool by burning pool tokens in exchange for deposit tokens 
 1. transfer pool tokens from sender and burn 
-2. transfer deposit tokens to sender based on amount of pool tokens burned 
-
-**stake(amount)**
-- stake TRU on a pool
-
-**unstake(amount)**
-- unstake TRU from a pool
+2. transfer deposit tokens to sender based on amount of pool tokens burned
 
 # Planned TrueFi Pools
 
@@ -152,6 +146,9 @@ Pool #1 will have several initial parameters:
 - Idle Funds usage: 100% CRV
 
 # Voting Specification
+
+We use a prediction market to signal how risky a loan is.
+
 #### LoanToken Parameters
 - rate (APY)
 - term
@@ -159,19 +156,22 @@ Pool #1 will have several initial parameters:
 - borrower
 
 #### Lending Pool functions
-- voteFor()
-- voteAgainst()
-- processLoan()
-- registerLoan()
+- process()
+- register()
 
 #### Lending Pool Parameters: 
-- Minimum Loan Size: 1M TUSD
-- Maximum Loan Size: 10M TUSD
-- Minimum APY: 10%
-- Minimum TRU voted YES required to approve a loan: loan size in TUSD * factor
-    -> initial factor is 0.7
-- Minimum ratio YES votes required to pass: 0.7
-- TRU default burn factor: 80%
+- minLoan: Minimum Loan Size
+- maxLoan: Maximum Loan Size
+- minRate: Minimum Loan APY
+- riskAversion: Risk Aversion Factor
+
+riskAversion measures how much worse it is to lose $1 than it is to gain $1.
+
+##### Initial Parameter Values:
+- minLoan: 1M TUSD
+- maxLoan: 10M TUSD
+- minRate: 10%
+- riskAversion: 1.0
 
 ### Lending Pool Behavior
 - Whitelist borrowers
