@@ -56,7 +56,7 @@ TrueFi will use TrustToken incentive rewards to bootstrap growth. Early adopters
 
 # Philosophy - Progressive Decentralization
 
-TrustLab's mission is to make financial freedom as accessible as the dollar and open access to financial opportunities. 
+TrustLab's mission is to make financial freedom as accessible as the internet and open access to financial opportunities. 
 
 In line with this philosophy, TrueFi will be built on the concept of progressive decentralization. Initially, the focus of TrueFi development will be to bootstrap the protocol and distribute TRU to the community of users and developers who participate in the protocol. The second phase will consist of automation and decentralization. Therefore the initial specification is rigid, with conservative parameters such as minimum/maximum APY and high TRU participation factor. It's important to remove these stops as the system grows.
 
@@ -102,52 +102,6 @@ The long term goal of TrueFi is to become a market-driven, automated credit rati
     - LoanTokens can be burned in exchange for a share of the deposit tokens in contract
     - Ideally borrower would have paid back (principal + principal * rate)
 
-## TrueFi Lending Pool
-
-The Lending Pool is a TrueFi pool which exposes depositors to un-collateralized loans. A select set of institutional borrowers will be chosen for this pool in order to keep the pool initially secure. Borrower addresses will be whitelisted and will be the only addresses which can be approved for loans.  The pool will purchase LoanTokens based on a set of parameters. A function can be called passing in a LoanToken address, and if the LoanToken meets the pool criteria, the loan is approved and the pool funds are used to fund the loan.
-
-Capital that is not actively being loaned out will be used to provide liquidity in audited, high-interest rate defi smart contracts (such as Aave or curve.fi).
-
-#### Lending Pool Parameters: 
-- minLoan: Minimum Loan Size
-- maxLoan: Maximum Loan Size
-- minRate: Minimum Loan APY
-- riskAversion: Risk Aversion Factor
-- participationFactor: how many TRU voted per USD size of loan required to approve
-
-**note:** riskAversion measures how much worse it is to lose $1 than it is to gain $1.
-
-##### Initial Parameter Values:
-- minLoan: 1M TUSD
-- maxLoan: 10M TUSD
-- minRate: 10%
-- riskAversion: 1.0
-- participation: 1.0
-
-### Lending Pool Behavior
-- Whitelist borrowers
-- Borrowers deploy loan token with Loan Parameters
-- Window of time where borrowers
-- Window of time where TRU holders can vote
-- When a loan is approved, the TRU voted on it is staked
-    -> voting yes stakes TRU for
-    -> voting no stakes TRU against
-- Loans not approved refunds TRU
-- Proposals can be revoked by borrower
-
-#### Default Parameters
-
-The Lending Pool will have several initial parameters:
-
-- Minimum loan size: 1M TUSD
-- Maximum loan size: 10M TUSD
-- Minimum % APR: 10%
-- Maximum % APR: 30%
-- Minimum Term: 1 day
-- Maximum Term: 30 days
-- Assets: TUSD only
-- Idle Funds usage: 100% CRV
-
 ## Credit Prediction Market
 
 TrueFi uses use a prediction market to signal how risky a loan is. The Credit Prediction Market estimates the likelihood of a loan defaulting. Any TRU holder can vote YES or NO and stake TRU as collateral on their vote. If a loan is funded, TRU is locked into the market until. Locking TRU into the prediction market allows voters to earn and claim incentive TRU throughout the course of the loan. After the loan's term, if the voter is correct, they earn a TRU reward plus a portion of the losing side's vote. Lenders can use the credit prediction market as an indicator as to how safe or risky a given loan is.
@@ -169,16 +123,26 @@ A borrower can pay back their loan at any time before the end of the term. Borro
 
 ### Staking Rewards and Payouts
 
+Two ways you get TRU by voting:
+- Reward over time for participation
+- Payout of prediction market
+
 Creating good staking payouts is difficult as creating too much of a reward for voting YES or NO could cause participants to always vote YES or NO. Creating too much of a punishment for losing could also cause nobody to participate in the rating system. For this reason, all participation is rewarded equally through TRU incentive distribution. In addition, a few adjustable factors are set up to adjust the punishment from losing the vote.
 
 #### Rewards
 
-Rewards are paid out proportionally to all participants, favoring participation in ranking higher interest loans by weighting rewards based on the total interest that would be paid over the course of a loan. Current reward can be claimed at any time so that there is more value to staking (rather than having to wait until the end of a loan).  
+Rewards are paid out proportionally to all participants, favoring participation in ranking higher interest loans by weighting rewards based on the total interest that would be paid over the course of a loan. Current reward can be claimed at any time so that there is more value to staking (rather than having to wait until the end of a loan). 
 
-`Reward = (Total interest to be paid in TUSD) * (remaining TRU distribution for stakers)`  
+`chi = (TRU remaining in distributor) / (Total TRU allocated for distribution)` 
 
-`Claimable reward =
-R * (current time / total time) * (account TRU staked / total TRU staked) - amount claimed`  
+`interest = (loan APY * term * principal)` 
+
+`R = Total Reward = (interest * chi)`  
+
+- R is distributed to voters based on their proportion of votes/total_votes
+- Voters can claim their proportion based on time.
+
+`Claimable reward = R * (current time / total time) * (account TRU staked / total TRU staked) - (amount claimed)`
 
 #### Payouts
 
@@ -191,6 +155,48 @@ Initial factors will be set as follows:
 
 **lose factor:** 0.25  
 **burn factor:** 0.25  
+
+## TrueFi Lending Pool
+
+The Lending Pool is a TrueFi pool which exposes depositors to un-collateralized loans. A select set of institutional borrowers will be chosen for this pool in order to keep the pool initially secure. Borrower addresses will be whitelisted and will be the only addresses which can be approved for loans.  The pool will purchase LoanTokens based on a set of parameters. A function can be called passing in a LoanToken address, and if the LoanToken meets the pool criteria, the loan is approved and the pool funds are used to fund the loan.
+
+Capital that is not actively being loaned out will be used to provide liquidity in audited, high-interest rate defi smart contracts (such as Aave or curve.fi).
+
+#### Lending Pool Parameters: 
+- minLoan: Minimum Loan Size
+- maxLoan: Maximum Loan Size
+- minRate: Minimum Loan APY
+- maxRate: Maximum Loan APY
+- minTerm: Minimum Term Length
+- maxTerm: Maximum Term Length
+- riskAversion: Risk Aversion Factor Based on Expected Value
+- participationFactor: How Many Votes Required to Approve
+
+**riskAversion:** Measures how much worse it is to lose $1 than it is to gain $1.  
+**participationFactor:** Ratio of # of TRU staked on loan to size of loan.  
+
+### Lending Pool Behavior
+- Whitelist borrowers
+- Borrowers register loan tokens with prediction market
+- Window of time where borrowers
+- Window of time where TRU holders can vote
+- Loans not approved refunds TRU
+- Proposals can be revoked by borrower
+
+#### Default Parameters
+
+The Lending Pool will have several initial parameters:
+
+- Risk Aversion: 1.0
+- participation: 1.0
+- Minimum loan size: 1M TUSD
+- Maximum loan size: 10M TUSD
+- Minimum % APR: 10%
+- Maximum % APR: 30%
+- Minimum Term: 1 day
+- Maximum Term: 30 days
+- Assets: TUSD only
+- Idle Funds usage: 100% CRV
 
 ## TRU Distribution
 
