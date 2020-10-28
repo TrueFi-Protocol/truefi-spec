@@ -58,9 +58,9 @@ TrueFi will use TrustToken incentive rewards to bootstrap growth. Early adopters
 
 TrustLab's mission is to make financial freedom as accessible as the dollar and open access to financial opportunities. 
 
-In line with this philosophy, TrueFi will be built on the concept of progressive decentralization. Initially, the focus of TrueFi development will be to bootstrap the protocol and distribute TRU to the community of users and developers who participate in the protocol. The second phase will consist of automation and decentralization. 
+In line with this philosophy, TrueFi will be built on the concept of progressive decentralization. Initially, the focus of TrueFi development will be to bootstrap the protocol and distribute TRU to the community of users and developers who participate in the protocol. The second phase will consist of automation and decentralization. Therefore the initial specification is rigid, with conservative parameters such as minimum/maximum APY and high TRU participation factor. It's important to remove these stops as the system grows.
 
-The long term goal of TrueFi is to become an automated credit rating and lending system. Uncollateralized loans are extremely high risk, and building a permissionless solution to create these kinds of loans is very difficult. Therefore TrueFi will be launched with strict parameters and place the majority of the risk on TrustLabs and early adopters. 
+The long term goal of TrueFi is to become a market-driven, automated credit rating and lending system. Uncollateralized loans are extremely high risk, and building a permissionless solution to create these kinds of loans is very difficult. Therefore TrueFi will be launched with strict parameters and place the majority of the risk on TrustLabs and early adopters. 
 
 # Technical Details
 
