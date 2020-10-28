@@ -213,20 +213,39 @@ Of the 565M TRU to be used for incentives, we plan on distributing through multi
 |        |                 |             |               |
 |--------|-----------------|-------------|---------------|
 |        | Third Party LPs | TrueFi LPs  | TRU Stakers   |
-| Ratio  | 0.10            | 0.4         | 0.5           |
-| Time   | 6 Months        | 4 years     | 4 years       |
-| Total  | 56,550,000      | 226,200,000 | 282,750,000   |
+| Ratio  | 0.25            | 0.3         | 0.45          |
+| Time   | 1-12 Months     | 4 years     | 4 years       |
+| Total  | 141,375,000     | 169,650,000 | 254,475,000   |
 |        |                 |             |               |
 
 These values were chosen in order to distribute TRU to early adopters of the protocol, and incentivise providing liquidity for TRU pairs on DEXs such as Uniswap and Balancer in the short term. We also want to reward long term users of the protocol by providing the majority of incentive distribution to users of TrueFi.
 
 There will be two types of distributions: one for providing liquidity on external market making protocols, and one for providing liquidity on TrueFi. These will be handled with similar but slightly different mechanisms.
 
-To farm TRU by providing liquidity outside of TrueFi, LP tokens need to be staked in exchange for farm tokens (see below). Holders of farm tokens can claim rewards in TRU as incentive for providing liquidity on external markets. Markets considered are:
+To farm TRU by providing liquidity outside of TrueFi, LP tokens need to be staked in exchange for farm tokens (see below). Holders of farm tokens can claim rewards in TRU as incentive for providing liquidity on external markets. These markets are:
 
 - Uniswap ETH/TRU
 - Uniswap TrueFi-LP / TUSD
 - Balancer 95% BAL / 5% TRU
+
+#### Balancer 95% BAL / 5% TRU
+- Meant to be the highest yield pool for the shortest amount of time. BAL holders can use BAL to farm TRU.
+
+#### Uniswap ETH/TRU
+- Incentivise TRU liquidity versus ETH. ETH holders can farm TRU using ETH with upside to both.
+
+#### UNI TUSD/TFI-LP
+- Provide liquidity for swapping pool tokens and TUSD. Useful for small investors that need TUSD liquidity going in/out of the pool.
+
+- Also the pool that gives the most TRU for 1 year due to stacked inventives.
+
+#### TrueFi LP (TFI-LP)
+- Incentivise depositing TUSD into the TrueFi Pool. Lowest yield but longest distribution of 4 years.
+
+#### TRU Staking
+- Variable reward incentivises voting on loans and rating credit.
+
+- Distributes the highest total amount of TRU.
 
 To farm TRU by providing liquidity within TrueFi, accounts will simply deposit tokens into one of the TrueFi pools. In addition to providing liquidity, TRU holders can stake TRU and vote to approve/disapprove loans within the LendingPool. Ways to farm TRU on TruFi include:
 
