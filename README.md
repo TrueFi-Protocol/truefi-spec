@@ -1,40 +1,83 @@
 # TrueFi Specification
-TrueFi is a protocol for creating interest bearing pools with a high APR for liquidity providers. TrueFi includes a staking mechanism using TrustTokens (TRU) and rewards stakers for keeping stable, high APRs. Un-collateralized loans and decentralized lending are utilized in order to achieve high interest rates for pools. 
 
-TrueFi is a product that we are actively designing and this document is intended to act as a plan and specification for design. We are aiming to launch TrueFi on the Ethereum mainnet in November 2020.
+TrueFi is a protocol for creating interest bearing pools with a high APR for liquidity providers. TrueFi includes a utility and rewards mechanisms using TrustTokens (TRU) and rewards participants for maintaining stable, high APRs. Un-collateralized loans and decentralized lending are utilized in order to achieve high interest rates for pools.
 
-## Terminology
+TrueFi is a product that we are actively designing and this document is intended to act as a plan and specification for design. TrueFi is being developed by [TrustLabs](https://www.trusttoken.com/) in partnership with [EthWorks](https://ethworks.io/). TrueFi is aiming to be released on Ethereum mainnet November 22nd 2020.
 
-**Token** - An ERC20 token running on the Ethereum blockchain.
+### Terminology
+
+**Token** - An ERC20 token running on the Ethereum blockchain.  
 **Stablecoin** - A token which is pegged to another asset.  
 **DeFi** - Decentralized finance using smart contracts.  
 **Pool** - A smart contract which allows accounts to pool tokens with the goal of earning interest.  
 **Deposit Tokens** - Tokens deposited into a pool which are used to earn interest through lending or arbitrage opportunities.  
 **Pool Tokens** - Tokens issued by a pool to represent share in the pool's deposit tokens.  
 **TrustToken** - An ERC20 token used to provide utility in the TrueFi ecosystem.  
-**TrueUSD** - A stablecoin used frequently in TrueFi to provide liquidity.
+**TrueUSD** - A stablecoin used frequently in TrueFi to provide liquidity.  
+**Prediction Market** - Exchange-traded market created for the purpose of trading the outcome of events.
 
-# Background
+# Overview
 
-While a lot of DeFi’s success so far has been built on collateralized lending (Compound, AAVE, etc.), many people on the cutting edge of DeFi see that for DeFi to get to its next level of success, it will need to be able to tap into un-collateralized lending as well. Innovative projects such as AAVE are already making moves in this direction. 
+A lot of DeFi’s success so far has been built on collateralized lending. Platforms such as  Compound, AAVE, and Maker have created a solid foundation which allows cryptocurrency holders to earn high interest rates in a permissionless manner. However, there is a massive opportunity for uncollateralized loans to yield even higher interest rates than existing collateralized lending protocols. Innovative projects such as AAVE are already building tools in this direction [credit delegation](https://docs.aave.com/developers/developing-on-aave/the-protocol/credit-delegation).
 
-Reputable institutions and crypto hedge funds funds such as Alameda, Three Arrows, etc. are offering 8-12% for large un-collateralized loans. These rates are higher than what’s available in DeFi today, primarily because DeFi today does almost exclusively collateralized lending (which borrowers will systematically pay less for) 
+Based on a small survey of partners, TrustLabs found that reputable institutions and crypto hedge funds funds are willing to offer 8-12% interest rates for large un-collateralized stablecoin loans. These rates are higher than what’s available in DeFi today, primarily because DeFi today does almost exclusively collateralized lending (which borrowers will systematically pay less for). Most retail investors do not have access to invest in funds of this type because their check size is too small. By sourcing funds via deposits in a smart contract, TrueFi can open up uncollateralized lending opportunities to investors of any size. 
 
-Most individual investors do not have access to invest in funds of this type because their check-size is too small. Many of these funds are only interested in loans of $1mm at the very minimum.
-By keeping un-deployed capital in DeFi, TrueFi can offer an interest rate that is at least as high as the highest rate available in DeFi today. It will only make loans when the proposed rate exceeds this rate. 
+TrueFi consists of four major pieces:  
+1. Tokenized Loans  
+2. Lending Pools  
+3. Credit Prediction Market  
+4. TrustToken (TRU)  
 
-TrueFi can use TrustToken incentive rewards to bootstrap growth similar to how Compound used $COMP. Down the road, TrueFi can expand to a wide set of borrowers as its systems for assessing and managing risk get more sophisticated.
+### Tokenized Loans (LoanToken)
 
-# LoanToken
+A LoanToken is an ERC20 contract which represents the lender share of an uncollateralized loan. LoanTokens are an important building block of TrueFi, as they can operate independently from the TrueFi pools. Tokenized loans open up opportunities for secondary markets, though TrueFi will initially not allow for the transfer of LoanTokens. 
 
-A LoanToken is an ERC20 contract which represents the lender share of an uncollateralized loan. LoanTokens are an important building block of TrueFi, as they can operate independently from the TrueFi pools. Creating a LoanToken requires a borrower address, principal loan amount, loan length, and interest rate.
+Creating a LoanToken requires a borrower address, principal loan amount, loan length, and interest rate. Users mint LoanTokens by depositing funds into the token contract, and the minted tokens represent a share in the funds repaid plus interest at the end of the term. LoanTokens are minted at a discounted rate, meaning for every $1 deposited, $1 + ($1 * rate * term) tokens are minted. Once a loan is funded, the borrower can call a function which allows them to borrow the funds from the smart contract. The borrower pays funds back, and at the end of the term LoanToken holders can exchange their LoanTokens 1:1 for their original funds plus interest.
 
-## LoanToken Lifecycle
+### Lending Pools (TrueFi Pools)
+
+A Lending pool is an ERC20 contract with additional functions to support providing liquidity and staking TrustTokens. Lending Pools are another building block of TrueFi, allowing pool depositors to receive pool tokens which represent their share of a pool. Lending pools decide based on a set of rules which borrowers to fund, and thus chooses which LoanTokens to fund.
+
+Initially TrueFi will have a single lending pool. This pool will act as a pilot for future pools, and will only lend to a whitelist of trusted borrowers
+
+TrueFi can offer an interest rate that is at least as high as the highest stable rate available in DeFi today by depositing unused funds into existing defi protocols. TrueFi will only make loans when the proposed rate exceeds the rate offered by the selected defi protocol.
+
+### Credit Prediction Market
+
+How can loans with no collateral be built on an anonymous platform such as Ethereum? TrueFi uses a prediction market to rate the credit worthiness of borrowers. Participants are rewarded for choosing borrowers that pay back their loans with high interest. Incorrectly predicting the outcome of a loan will cause funds to be lost.
+
+The prediction market operates independently of the TrueFi pools. The only goal of this market is to try to accurately assess the likelihood a LoanToken will be paid back in full. It is up to third parties or TrueFi pools to decide to fund the LoanTokens. The TrueFi Credit Prediction Market will help expand credit to wide set of borrowers as its systems for assessing and managing risk become more sophisticated.
+
+### TrustToken (TRU)
+
+What is the purpose of TrustTokens in the context of TrueFi? TrustToken holders ultimately have say over who is a credible borrower in the prediction market. TRU gives holder the ability to rate credit for third parties. Currently the United States relies on a very small set of rating agencies, which are notoriously lack transparency and security. Through TRU credit rating, a permissionless system of credit can be built which operates purely through incentives.
+
+TrueFi will use TrustToken incentive rewards to bootstrap growth. Early adopters and liquidity providers are distributed TRU for participating in TrueFi. These participants can then use TRU in the credit prediction market, and have part ownership in building a new credit system.
+
+# Philosophy - Progressive Decentralization
+
+TrustLab's mission is to make financial freedom as accessible as the dollar and open access to financial opportunities. 
+
+In line with this philosophy, TrueFi will be built on the concept of progressive decentralization. Initially, the focus of TrueFi development will be to bootstrap the protocol and distribute TRU to the community of users and developers who participate in the protocol. The second phase will consist of automation and decentralization. 
+
+The long term goal of TrueFi is to become an automated credit rating and lending system. Uncollateralized loans are extremely high risk, and building a permissionless solution to create these kinds of loans is very difficult. Therefore TrueFi will be launched with strict parameters and place the majority of the risk on TrustLabs and early adopters. 
+
+# Technical Details
+
+## LoanToken
+
+### LoanToken Parameters
+- rate (APY)
+- term
+- amount
+- borrower
+
+### LoanToken Lifecycle
 
 #### I. Fundraising
     - Mint/Burn Loan Tokens is enabled
     - Depositors can send deposit tokens to contract
-        -> mint LoanTokens equal to deposit
+        -> mint LoanTokens according to discount rate model
     - Can never deposit more than the principal
         -> Return amount over principal if sending more than principal
     - Fundraising is complete once we reach principal amount
@@ -59,113 +102,20 @@ A LoanToken is an ERC20 contract which represents the lender share of an uncolla
     - LoanTokens can be burned in exchange for a share of the deposit tokens in contract
     - Ideally borrower would have paid back (principal + principal * rate)
 
-## LoanToken Functions
+## TrueFi Lending Pool
 
-**constructor(borrower, principal, length, rate)**
-- create a new loan opportunity
-- owner of token is deployer, and only owner can approve the loan
+The Lending Pool is a TrueFi pool which exposes depositors to un-collateralized loans. A select set of institutional borrowers will be chosen for this pool in order to keep the pool initially secure. Borrower addresses will be whitelisted and will be the only addresses which can be approved for loans.  The pool will purchase LoanTokens based on a set of parameters. A function can be called passing in a LoanToken address, and if the LoanToken meets the pool criteria, the loan is approved and the pool funds are used to fund the loan.
 
-**balance()** 
-- get balance of deposit tokens
-
-**value()** 
-- get value of principal plus interest
-
-**deposit(amount)** 
-- transfer deposit tokens to this contract and mint loan tokens
-- can only be called during fund-raising period
-
-**redeem(amount)** 
-- redeem and burn loan tokens, withdraw deposit tokens
-- can only be called after loan expiry
-
-**approve()** 
-- approve loan
-- can only be called if enough funds are raised
-- can only be called during fund-raising period
-
-**pay()**
-- pay back loan by transferring deposit tokens to pool
-- can only be called once loan is active
-
-# TrueFi Pools
-
-A TrueFiPool is an ERC20 contract with additional functions to support providing liquidity and staking TrustTokens. TrueFi Pools are another building block of TrueFi, allowing pool depositors to receive pool tokens which represent their share of a pool.
-
-### TrueFiPool Functions
-
-**value()** 
-- returns the value of one pool token
-
-**join(amount)**
-- called to join a TrueFi pool by depositing an amount of deposit tokens and minting pool tokens 
-1. transfer deposit tokens from sender
-2. mint pool tokens to sender equal to amount of deposit tokens 
-
-**exit(amount)** 
-- called to exit a TrueFi pool by burning pool tokens in exchange for deposit tokens 
-1. transfer pool tokens from sender and burn 
-2. transfer deposit tokens to sender based on amount of pool tokens burned
-
-# Planned TrueFi Pools
-
-## Pool 0
-Pool 0 will be the first TrueFi pool which simply exposes depositors to the curve.fi pool. Pool 0 will be used to beta test TrueFi and liquidity mining.
-
-## Pool 1: Un-collateralized Lending Pool
-Pool 1 is a TrueFi pool which exposes depositors to un-collateralized loans. A select set of institutional borrowers will be chosen for this pool in order to keep the pool initially secure. Borrower addresses will be whitelisted and will be the only addresses which can request loans.
-
-#### Applying for a loan
-
-Depositors deposit TrueCurrencies into a pool. Borrowers can submit proposals to borrow capital from the pool. They submit how much capital they want, the % APR, the term, and the Ethereum address to send the capital to if the proposal is approved. 
-
-#### Approving a loan
-
-Loan proposals proposals are voted on by TrustToken holders. Voting YES on a proposal stakes your TrustTokens on that loan and exposes you to upside & downside from it. If a proposal is approved, the capital is given as an un-collateralized loan to the borrower
-The borrower must return the capital before the term is up. If they return the full amount including interest, TrustToken voters that voted YES on the proposal receive a reward. If they fail to return the full amount including interest, TrustToken voters that voted YES on the proposal will have some of their TrustTokens burned.  Capital that is not actively being loaned out will be used to provide liquidity in safe, high-interest rate defi smart contracts (such as Aave or curve.fi).
-
-#### Paying back a loan
-
-A borrower can pay back their loan at any time before the expiry date. Borrowers are expected to pay back principal + (principal * interest).
-
-#### Withdrawing funds after loan expiry
-
-Once a loan is past its expiry date, a function will allow LoanTokens held by the pool will be exchanged for the underlying deposit tokens. Assuming a loan is paid back in full, the amount of deposit tokens will be the principal amount plus interest.
-
-### Pool Parameters
-
-Pool #1 will have several initial parameters:
-
-- Minimum loan size: 1M TUSD
-- Maximum loan size: 10M TUSD
-- Minimum % APR: 10%
-- Maximum % APR: 20%
-- Minimum Term: 30 days
-- Maximum Term: 90 days
-- Assets: TUSD only
-- Idle Funds usage: 100% CRV
-
-# Voting Specification
-
-We use a prediction market to signal how risky a loan is.
-
-#### LoanToken Parameters
-- rate (APY)
-- term
-- amount
-- borrower
-
-#### Lending Pool functions
-- process()
-- register()
+Capital that is not actively being loaned out will be used to provide liquidity in audited, high-interest rate defi smart contracts (such as Aave or curve.fi).
 
 #### Lending Pool Parameters: 
 - minLoan: Minimum Loan Size
 - maxLoan: Maximum Loan Size
 - minRate: Minimum Loan APY
 - riskAversion: Risk Aversion Factor
+- participation: how many TRU required to approve a loan
 
-riskAversion measures how much worse it is to lose $1 than it is to gain $1.
+**note:** riskAversion measures how much worse it is to lose $1 than it is to gain $1.
 
 ##### Initial Parameter Values:
 - minLoan: 1M TUSD
@@ -184,25 +134,64 @@ riskAversion measures how much worse it is to lose $1 than it is to gain $1.
 - Loans not approved refunds TRU
 - Proposals can be revoked by borrower
 
-### Loan Voting Lifecycle V1
-- Borrowers can apply for loans at any time
-- When borrowers apply, this opens a 7 day process where TRU holders can vote
-- After 7 days, a loan is approved/denied and funds are sent out
-- Borrowers can cancel at any time
+#### Default Parameters
 
-## TRU Staking Rewards:
-R = (TUSD paid in interest) * (fraction of incentive distribution TRU remaining)
-Split R proportionally based on the loan stakers
-distribute TRU over time, not just at end of loan
-   
-#### Staking YES:
-- If the loan is paid back fully: you get x% increase on your staked TRU where x = the % interest paid
-- If the loan defaults: 80% TRU are burned
-#### Staking NO:
-- If the loan defaults: you get 100% increase on your staked TRU (you double up)
-- If loan paid back: your TRU is returned
+The Lending Pool will have several initial parameters:
 
-# TRU Distribution
+- Minimum loan size: 1M TUSD
+- Maximum loan size: 10M TUSD
+- Minimum % APR: 10%
+- Maximum % APR: 20%
+- Minimum Term: 30 days
+- Maximum Term: 90 days
+- Assets: TUSD only
+- Idle Funds usage: 100% CRV
+
+## Credit Prediction Market
+
+TrueFi uses use a prediction market to signal how risky a loan is. The Credit Prediction Market estimates the likelihood of a loan defaulting. Any TRU holder can vote YES or NO and stake TRU as collateral on their vote. If a loan is funded, TRU is locked into the market until. Locking TRU into the prediction market allows voters to earn and claim incentive TRU throughout the course of the loan. After the loan's term, if the voter is correct, they earn a TRU reward plus a portion of the losing side's vote. Lenders can use the credit prediction market as an indicator as to how safe or risky a given loan is.
+
+### Voting Lifecycle
+- Borrowers can apply for loans at any time by deploying a LoanToken
+- LoanTokens are registered with the prediction market contract
+- Once registered, TRU holders can vote at any time
+- If a loan is funded, TRU is locked for the term of the loan
+- At the end of the term, the amount paid back is recorded, and payouts are determined based on the outcome
+
+### Applying for A Credit Rating
+
+To receive a credit rating on a loan, a borrower deploys a LoanToken with parameters and calls a function on the credit market contract. Once applied, TRU holders can vote on loans. The ratio of YES to NO voters is a signal
+
+### Loan Outcomes
+
+A borrower can pay back their loan at any time before the end of the term. Borrowers are expected to pay back principal + (principal * interest). If they return the full amount including interest, TrustToken voters that voted YES on the proposal receive a reward. If they fail to return the full amount including interest, TrustToken voters that voted YES on the proposal will have some of their TrustTokens burned.
+
+### Staking Rewards and Payouts
+
+Creating good staking payouts is difficult as creating too much of a reward for voting YES or NO could cause participants to always vote YES or NO. Creating too much of a punishment for losing could also cause nobody to participate in the rating system. For this reason, all participation is rewarded equally through TRU incentive distribution. In addition, a few adjustable factors are set up to adjust the punishment from losing the vote.
+
+#### Rewards
+
+Rewards are paid out proportionally to all participants, favoring participation in ranking higher interest loans by weighting rewards based on the total interest that would be paid over the course of a loan. Current reward can be claimed at any time so that there is more value to staking (rather than having to wait until the end of a loan).  
+
+`Reward = (Total interest to be paid in TUSD) * (remaining TRU distribution for stakers)`  
+
+`Claimable reward =
+R * (current time / total time) * (account TRU staked / total TRU staked) - amount claimed`  
+
+#### Payouts
+
+After the expiry, a portion of the loser's TRU is paid out to the winner, and a portion of the loser's TRU is paid out to the loser. A few factor in the prediction market contract help determine the payout:  
+
+**lose factor:** % of TRU paid from the losing side to the winning side  
+**burn factor:** % of lost TRU burned  
+
+Initial factors will be set as follows:
+
+**lose factor:** 0.25  
+**burn factor:** 0.25  
+
+## TRU Distribution
 
 39% of TRU will be distributed to liquidity providers (LPs) over 4 years. The TRU intended to be distributed to LPs will be sent to a smart contract which is owned by a multisig. The multisig will have control over the smart contract, otherwise the tokens cannot be spent. The multisig can approve transfers to smart contracts which will hold funds for liquidity mining.
 
@@ -236,7 +225,7 @@ There will be two types of distributions: one for providing liquidity on externa
 To farm TRU by providing liquidity outside of TrueFi, LP tokens need to be staked in exchange for farm tokens (see below). Holders of farm tokens can claim rewards in TRU as incentive for providing liquidity on external markets. Markets considered are:
 
 - Uniswap ETH/TRU
-- Uniswap TrueFi LP / TUSD
+- Uniswap TrueFi-LP / TUSD
 - Balancer 95% BAL / 5% TRU
 
 To farm TRU by providing liquidity within TrueFi, accounts will simply deposit tokens into one of the TrueFi pools. In addition to providing liquidity, TRU holders can stake TRU and vote to approve/disapprove loans within the LendingPool. Ways to farm TRU on TruFi include:
