@@ -142,7 +142,7 @@ The Lending Pool will have several initial parameters:
 - Minimum loan size: 1M TUSD
 - Maximum loan size: 10M TUSD
 - Minimum % APR: 10%
-- Maximum % APR: 20%
+- Maximum % APR: 30%
 - Minimum Term: 1 day
 - Maximum Term: 30 days
 - Assets: TUSD only
