@@ -113,7 +113,7 @@ Capital that is not actively being loaned out will be used to provide liquidity 
 - maxLoan: Maximum Loan Size
 - minRate: Minimum Loan APY
 - riskAversion: Risk Aversion Factor
-- participation: how many TRU required to approve a loan
+- participationFactor: how many TRU voted per USD size of loan required to approve
 
 **note:** riskAversion measures how much worse it is to lose $1 than it is to gain $1.
 
@@ -122,6 +122,7 @@ Capital that is not actively being loaned out will be used to provide liquidity 
 - maxLoan: 10M TUSD
 - minRate: 10%
 - riskAversion: 1.0
+- participation: 1.0
 
 ### Lending Pool Behavior
 - Whitelist borrowers
@@ -142,8 +143,8 @@ The Lending Pool will have several initial parameters:
 - Maximum loan size: 10M TUSD
 - Minimum % APR: 10%
 - Maximum % APR: 20%
-- Minimum Term: 30 days
-- Maximum Term: 90 days
+- Minimum Term: 1 day
+- Maximum Term: 30 days
 - Assets: TUSD only
 - Idle Funds usage: 100% CRV
 
