@@ -169,6 +169,7 @@ Capital that is not actively being loaned out will be used to provide liquidity 
 - maxRate: Maximum Loan APY
 - minTerm: Minimum Term Length
 - maxTerm: Maximum Term Length
+- fee: Percentage Fee
 - riskAversion: Risk Aversion Factor Based on Expected Value
 - participationFactor: How Many Votes Required to Approve
 
@@ -195,6 +196,7 @@ The Lending Pool will have several initial parameters:
 - Maximum % APR: 30%
 - Minimum Term: 1 day
 - Maximum Term: 30 days
+- Fee: 0.25%
 - Assets: TUSD only
 - Idle Funds usage: 100% CRV
 
