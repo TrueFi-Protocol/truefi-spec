@@ -208,9 +208,9 @@ Max Token Supply: 1,450,000,000
 
 |                 |         |               |                   |
 |-----------------|---------|---------------|-------------------|
-| Private Sale    | 28.64%  | 415,314,034   | 4 year vesting    |
-| Team            | 18.50%  | 268,250,000   | 4 year vesting    |
-| Future Team     | 4.50%   | 65,250,000    | 4 year vesting    |
+| Private Sale    | 28.64%  | 415,314,034   | 2 year vesting    |
+| Team            | 18.50%  | 268,250,000   | 2 year vesting    |
+| Future Team     | 4.50%   | 65,250,000    | 2 year vesting    |
 | Incentive       | 39.00%  | 565,500,000   | LPs & stakers     |
 | Company         | 9.36%   | 135,685,966   | unlocked          |
 |                 |         |               |                   |
