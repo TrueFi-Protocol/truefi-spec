@@ -201,11 +201,11 @@ The Lending Pool will have several initial parameters:
 - Idle Funds usage: 100% CRV
 
 ### Loan Approval Calculation
-Loan is approved if and only if `EV > 0`
-EV = upside - downside * risk_aversion
-upside = APY * loan_size * term
-downside = probability_of_default * loan_size
-probability_of_default = no_votes / (no_votes + yes_votes)
+- Loan is approved if and only if `EV > 0`
+- `EV = upside - downside * risk_aversion`
+- `upside = APY * loan_size * term`
+- `downside = probability_of_default * loan_size`
+- `probability_of_default = no_votes / (no_votes + yes_votes)`
 
 ## TRU Distribution
 
