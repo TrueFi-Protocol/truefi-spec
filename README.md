@@ -200,6 +200,13 @@ The Lending Pool will have several initial parameters:
 - Assets: TUSD only
 - Idle Funds usage: 100% CRV
 
+### Loan Approval Calculation
+Loan is approved if and only if `EV > 0`
+EV = upside - downside * risk_aversion
+upside = APY * loan_size * term
+downside = probability_of_default * loan_size
+probability_of_default = no_votes / (no_votes + yes_votes)
+
 ## TRU Distribution
 
 39% of TRU will be distributed to liquidity providers (LPs) over 4 years. The TRU intended to be distributed to LPs will be sent to a smart contract which is owned by a multisig. The multisig will have control over the smart contract, otherwise the tokens cannot be spent. The multisig can approve transfers to smart contracts which will hold funds for liquidity mining.
