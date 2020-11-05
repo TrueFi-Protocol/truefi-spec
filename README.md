@@ -202,10 +202,11 @@ The Lending Pool will have several initial parameters:
 
 ### Loan Approval Calculation
 - Loan is approved if and only if `EV > 0`
-- `EV = upside - downside * risk_aversion`
+- `EV = (upside * probability_paid_back) - (downside * risk_aversion * probability_of_default)`
 - `upside = APY * loan_size * term`
-- `downside = probability_of_default * loan_size`
+- `downside = loan_size`
 - `probability_of_default = no_votes / (no_votes + yes_votes)`
+- `probability_paid_back = yes_votes / (no_votes + yes_votes)`
 
 ## TRU Distribution
 
