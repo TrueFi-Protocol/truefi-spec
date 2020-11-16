@@ -2,7 +2,7 @@
 
 TrueFi is a protocol for creating interest bearing pools with a high APR for liquidity providers. TrueFi includes a utility and rewards mechanisms using TrustTokens (TRU) and rewards participants for maintaining stable, high APRs. Un-collateralized loans and decentralized lending are utilized in order to achieve high interest rates for pools.
 
-TrueFi is a product that we are actively designing and this document is intended to act as a plan and specification for design. TrueFi is being developed by [TrustLabs](https://www.trusttoken.com/) in partnership with [EthWorks](https://ethworks.io/). TrueFi is aiming to be released on Ethereum mainnet November 22nd 2020.
+TrueFi is a product that we are actively designing and this document is intended to act as a plan and specification for design. TrueFi is being developed by [TrustLabs](https://www.trusttoken.com/) in partnership with [EthWorks](https://ethworks.io/). TrueFi is aiming to be released on Ethereum mainnet November 21st 2020.
 
 ### Terminology
 
