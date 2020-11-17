@@ -254,7 +254,7 @@ To farm TRU by providing liquidity outside of TrueFi, LP tokens need to be stake
 #### UNI TUSD/TFI-LP
 - Provide liquidity for swapping pool tokens and TUSD. Useful for small investors that need TUSD liquidity going in/out of the pool.
 
-- Also the pool that gives the most TRU for 1 year due to stacked inventives.
+- Also the pool that should give the most yield for LPs. Earn yield through TrueFi, Uniswap fees, and TRU rewards.
 
 #### TrueFi LP (TFI-LP)
 - Incentivise depositing TUSD into the TrueFi Pool. Lowest yield but longest distribution of 4 years.
