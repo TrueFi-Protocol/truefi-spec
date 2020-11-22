@@ -216,12 +216,16 @@ Max Token Supply: 1,450,000,000
 
 |                 |         |               |                   |
 |-----------------|---------|---------------|-------------------|
-| Private Sale    | 28.64%  | 415,314,034   | 2 year vesting    |
-| Team            | 18.50%  | 268,250,000   | 2 year vesting    |
+| Private Sale    | 28.64%  | 415,314,034   | 2 year unlocking [1]  |
+| Team            | 18.50%  | 268,250,000   | 2 year unlocking [1]  |
 | Future Team     | 4.50%   | 65,250,000    | 2 year vesting    |
 | Incentive       | 39.00%  | 565,500,000   | LPs & stakers     |
-| Company         | 9.36%   | 135,685,966   | unlocked          |
+| Company         | 9.36%   | 135,685,966   | 1/3 Unlocked, 2/3 unlocking [2]|
 |                 |         |               |                   |
+
+[1] Private sale tokens and Team tokens unlock quarterly beginning on November 21, 2020. The eight unlock dates are November 21, 2020, February 19, 2021, May 20, 2021, August 18, 2021, November 16, 2021, February 14, 2022, May 15, 2022, August 13, 2022. 
+
+[2] The company tokens unlock 1/3 immediately to be able to support initial liquidity. Another 1/3 unlocks on November 21, 2021. The Final 1/3 unlocks on November 22, 2022. 
 
 ## Liquidity Mining
 
