@@ -104,7 +104,7 @@ The long term goal of TrueFi is to become a market-driven, automated credit rati
 
 ## Credit Prediction Market
 
-TrueFi uses use a prediction market to signal how risky a loan is. The Credit Prediction Market estimates the likelihood of a loan defaulting. Any TRU holder can vote YES or NO and stake TRU as collateral on their vote. If a loan is funded, TRU is locked into the market until. Locking TRU into the prediction market allows voters to earn and claim incentive TRU throughout the course of the loan. After the loan's term, if the voter is correct, they earn a TRU reward plus a portion of the losing side's vote. Lenders can use the credit prediction market as an indicator as to how safe or risky a given loan is.
+TrueFi uses use a prediction market to signal how risky a loan is. The Credit Prediction Market estimates the likelihood of a loan defaulting. Any TRU holder can vote YES or NO and stake TRU as collateral on their vote. If a loan is funded, TRU is locked into the market until the loan enters the complete phase. Locking TRU into the prediction market allows voters to earn and claim incentive TRU throughout the course of the loan. After the loan's term, if the voter is correct, they earn a TRU reward plus a portion of the losing side's vote. Lenders can use the credit prediction market as an indicator as to how safe or risky a given loan is.
 
 ### Voting Lifecycle
 - Borrowers can apply for loans at any time by deploying a LoanToken
@@ -146,7 +146,7 @@ Rewards are paid out proportionally to all participants, favoring participation 
 
 #### Payouts
 
-After the expiry, a portion of the loser's TRU is paid out to the winner, and a portion of the loser's TRU is paid out to the loser. A few factor in the prediction market contract help determine the payout:  
+After the expiry, a portion of the loser's TRU is paid out to the winner, and a portion of the loser's TRU is burned. A few factor in the prediction market contract help determine the payout:  
 
 **lose factor:** % of TRU paid from the losing side to the winning side  
 **burn factor:** % of lost TRU burned  
