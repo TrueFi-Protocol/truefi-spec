@@ -24,12 +24,18 @@ If a loan is passed, all stakers earn the origination fee. In the future, when T
 100% of origination fees (in the form of TFI-LP) will go towards stakers. In addition, stakers will receive TRU incentives every block. In the future when open-term loans are implemented, stakers may also receive a % of the interest generated. Stakers who vote on loans will also receive additional TRU incentives.
   
 TRU staked in the protocol will be used as collateral in the case of loan defaults. In a default scenario, up to 10% of all staked TRU will be used to cover losses in the TrueFi pool. TRU stakers are taking on the risk of loan defaults in the protocol in exchange for the staking rewards. The percentage of TRU lost due to a default can be adjusted by governance. Liquidation events are determined automatically whenever a loan defaults.
+
+In order to ensure stakers are committed to taking on the risk of loans defaulting, a 14 day cooldown will be required for unstaking. This ensures stakers cannot unstake right before a default event. To ensure fees from loans are paid fairly, 50% of origination fees are paid over the time of the loan, and 50% are paid when the loan is successfully repaid. This fee split incentivises stakers to be actively staked when a loan might default, and rewards stakers that hold stkTRU for a long period of time.
   
 ### Staking Parameters
 - 14 day cooldown for unstaking  
+- 2 day window to unstake after cooldown
+- Staking more during cooldown increases cooldown time
 - Maximum 10% penalty on loan defaults  
 - 100% origination fees to all stakers  
 - stkTRU required to approve loans  
+- 50% of fees paid over time of loan
+- 50% of fees paid when loan is repaid
  
 ## Governance
  
