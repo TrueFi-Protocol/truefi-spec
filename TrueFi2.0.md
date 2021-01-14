@@ -1,4 +1,4 @@
-# TrueFi v2 Specification
+# TrueFi 2.0 Specification
  
 TrueFi v2 is a series of upgrades to the original TrueFi specification. These upgrades improve and overhaul the TrueFi lending product, and focus on value accrual, decentralization, and automation. As the TrueFi roadmap is developed, upgrades will be made in phases synchronized with unlocked tokens entering circulation.
   
