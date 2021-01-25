@@ -20,7 +20,7 @@ Phase 1 will focus on value accrual for TRU holders and protocol governance. Thi
  
 A staking functionality will be added which allows TRU holders to stake TRU in exchange for protocol fees. Depositing TRU into the staking contract will mint a new token for the staker called stkTRU. stkTRU is a standard ERC20 token that represents the depositor's share of the stkTRU pool. Holding stkTRU entitles an account to rewards for holding the asset over time. Rewards are claimed in the form of TFI-LP tokens and TRU.
  
-Users will no longer rate loans with TRU directly, but rather will rate using stkTRU. stkTRU holders are taking on a blended risk of all loans. In essence, they are staking on the security of the borrower approval process. 
+Users will no longer rate loans with TRU directly, but rather will rate using stkTRU. stkTRU holders are taking on a blended risk of all loans. In essence, they are staking on the security of the borrower approval process. Raters will earn a small TRU reward when participating in the rating process.
 If a loan is passed, all stakers earn the origination fee. In the future, when TrueFi moves to open-term loans, stakers will be entitled to origination fees and (upon governance approval) a percentage of the interest revenue. 
  
 100% of origination fees (in the form of TFI-LP) will go towards stakers. In addition, stakers will receive TRU incentives every block. In the future when open-term loans are implemented, stakers may also receive a % of the interest generated. Stakers who vote on loans will also receive additional TRU incentives.
