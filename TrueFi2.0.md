@@ -8,7 +8,7 @@ TrueFi v2 is a series of upgrades to the original TrueFi specification. These up
 
 **TRU Staking** - Depositing TRU into a smart contract in exchange for protocol fees and rewards.  
 **stkTRU** - An ERC20 token which represents a share in the TRU staking pool.  
-**TFI-LP** - An ERC20 token which represents a share of the TrueFi lending pool.  
+**tfLP** - An ERC20 token which represents a share of the TrueFi lending pool.  
 **Liquidity Provider** - A party which provides liquidity to the TrueFi lending pool.  
 **TRU Governance** - Decentralized voting using TRU to adjust protocol parameters and make upgrades.  
  
@@ -18,12 +18,12 @@ Phase 1 will focus on value accrual for TRU holders and protocol governance. Thi
  
 ## Staking
  
-A staking functionality will be added which allows TRU holders to stake TRU in exchange for protocol fees. Depositing TRU into the staking contract will mint a new token for the staker called stkTRU. stkTRU is a standard ERC20 token that represents the depositor's share of the stkTRU pool. Holding stkTRU entitles an account to rewards for holding the asset over time. Rewards are claimed in the form of TFI-LP tokens and TRU.
+A staking functionality will be added which allows TRU holders to stake TRU in exchange for protocol fees. Depositing TRU into the staking contract will mint a new token for the staker called stkTRU. stkTRU is a standard ERC20 token that represents the depositor's share of the stkTRU pool. Holding stkTRU entitles an account to rewards for holding the asset over time. Rewards are claimed in the form of tfLP tokens and TRU.
  
 Users will no longer rate loans with TRU directly, but rather will rate using stkTRU. stkTRU holders are taking on a blended risk of all loans. In essence, they are staking on the security of the borrower approval process. Raters will earn a small TRU reward when participating in the rating process.
 If a loan is passed, all stakers earn the origination fee. In the future, when TrueFi moves to open-term loans, stakers will be entitled to origination fees and (upon governance approval) a percentage of the interest revenue. 
  
-100% of origination fees (in the form of TFI-LP) will go towards stakers. In addition, stakers will receive TRU incentives every block. In the future when open-term loans are implemented, stakers may also receive a % of the interest generated. Stakers who vote on loans will also receive additional TRU incentives.
+100% of origination fees (in the form of tfLP) will go towards stakers. In addition, stakers will receive TRU incentives every block. In the future when open-term loans are implemented, stakers may also receive a % of the interest generated. Stakers who vote on loans will also receive additional TRU incentives.
   
 TRU staked in the protocol will be used as collateral in the case of loan defaults. In a default scenario, up to 10% of all staked TRU will be used to cover losses in the TrueFi pool. TRU stakers are taking on the risk of loan defaults in the protocol in exchange for the staking rewards. The percentage of TRU lost due to a default can be adjusted by governance. Liquidation events are determined automatically whenever a loan defaults.
 
