@@ -65,6 +65,67 @@ Differences from Compound include:
 * Governance will be the timelock admin
 
 # Phase 2
+  
+## SUMMARY:
+Phase 2 will focus on overhauling how uncollateralized lending works in TrueFi.
+  
+The first major upgrade will introduce multi-asset borrowing and liquidity pools for multiple assets. A new asset pool is created by passing an ERC20 token to a factory. This factory will deploy a new pool, and allow the TrueLender contract to borrow directly from this pool. LoanTokens can now support any ERC20 token and borrowers will repay the borrowed asset to the LoanToken contract when a loan term is completed. Each pool will have its own strategy for lending idle assets to other defi protocols to maximize yield.
+  
+Open term lending with lines of credit will be allowed for borrowers. TRU stakers will be able to allocate stake oton individual lines of credit to increase the credit available. Each borrower will be able to use their line of credit to borrow from the TrueFi pool. A credit model will be voted in by governance which calculates the credit limit and risk factors for each borrower. Tokenized, fixed term, fixed interest loans will still be available, but will automatically calculate the loan terms depending on borrower credit and pool liquidity.
+  
+## MULTI-ASSET BORROWING
+  
+- Create lending pools for any ERC20 token.
+- Borrowers can apply to borrow one asset at a time
+  
+### Smart Contracts
+  
+#### TrueFiPoolFactory
+* owner can update a whitelist which allows certain tokens
+* new function: create(address token)
+* create() deploys a new TrueFiPool
+* create() registers new pool address
+* create() deploys a TrueFiStrategy
+* create() can only create one pool per ERC20 token
+* public mapping of token address => pool address
+  
+#### TrueLender
+  
+TrueLender now has the following attributes
+* withdraw from and TrueFi pool
+* each loan has a single asset
+* reclaim() transfers asset back to its respective asset pool
+* TrueLender handles liquidations and transfers TRU to the asset pool a default occurred in.
+  
+#### TrueFiPool & TrueFiStrategy
+* Pools will now include a TrueFiStrategy smart contract
+* TrueFiStrategy is allowed to store idle funds in other defi contracts.
+* Pools all use liquidExit() as calculated the same way
+  
+#### LoanToken
+* each LoanToken has a stored asset() that returns address of ERC20 borrowed
+* call repay() to automatically pay back the loan
+* burning LoanTokens returns asset
+  
+#### TrueFiStrategy
+* allows transferring idle funds into defi opportunities
+* withdraw idle funds, deposit into defi opportunity, transfer tokens to pool
+* move funds out of opportunity when borrowers withdraw
+  
+#### TrueRatingAgency
+* Applications now show the set of tokens a borrower is withdrawing
+  
+### Liquidator
+* In liquidate function, check LoanToken asset type, transfer slashed TRU to respective pool
+  
+### TrueFiGauge & Updated Incentives
+* Create a TrueFiGauge smart contract which will replace the existing tfTUSD farm
+* Any valid lp token can be staked here. Each valid pool is assigned a weight, and distribution is weighted based on governance allocation of weights. At first all pools will be weighted equally.
+* All current tfLP farm incentives will be migrated to the TrueFi gauge
+  
+## Questions:
+- How to deal with liquidations in multi asset borrowing?
+- How to allocate incentives for multiple pools?
+- Do we assume all stablecoins are worth $1 or use chainlink?
 
-Phase 2 will focus on overhauling how uncollateralized lending works in TrueFi. Rather than having TRU stakers approve individual loans, TRU holders will be able to stake on individual lines of credit. Each borrower will be able to use their line of credit to borrow from the TrueFi pool. A credit model will be voted in by governance which calculates the credit limit and risk factors for each borrower. Tokenized, fixed term, fixed interest loans will still be available, but will automatically calculate the loan terms depending on the credit model and pool liquidity.
 
