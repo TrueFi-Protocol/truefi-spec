@@ -85,38 +85,49 @@ Open term lending with lines of credit will be allowed for borrowers. TRU staker
 * new function: create(address token)
 * create() deploys a new TrueFiPool
 * create() registers new pool address
-* create() deploys a TrueFiStrategy
 * create() can only create one pool per ERC20 token
+* create() defaults to using no TrueFiStrategy
 * public mapping of token address => pool address
-  
-#### TrueLender
-  
-TrueLender now has the following attributes
-* withdraw from and TrueFi pool
-* each loan has a single asset
-* reclaim() transfers asset back to its respective asset pool
-* TrueLender handles liquidations and transfers TRU to the asset pool a default occurred in.
+* support precision of new tokens
+* pool value is denominated in tokens (1.01 price = 1.01 ETH)
+* ability to add price feed
   
 #### TrueFiPool & TrueFiStrategy
 * Pools will now include a TrueFiStrategy smart contract
-* TrueFiStrategy is allowed to store idle funds in other defi contracts.
+* TrueFiStrategy is allowed to store idle funds in other defi contracts
 * Pools all use liquidExit() as calculated the same way
+* Use governance to add pools to the full TrueFi system
+* Use governance to set TrueFiStrategy for a given pool
+  
+#### TrueLender
+* withdraw from any TrueFi pool
+* each loan has a single asset
+* reclaim() transfers asset back to its respective asset pool
+* TrueLender handles liquidations and transfers TRU to the asset pool a default occurred in
+* Need a mapping (address => parameters) to track lending params
+* register() function which sets up a new pool with default params
+* need to calculate the amount of votes differently
   
 #### LoanToken
 * each LoanToken has a stored asset() that returns address of ERC20 borrowed
-* call repay() to automatically pay back the loan
+* call repay() to automatically pay back the loan with asset
 * burning LoanTokens returns asset
+* support precision of new tokens
+  
+#### TrueRatingAgency
+* LoanTokens are created for specific assets and registered with TrueRatingAgency
+* Keep incentives the same for rating any loan
+* Store LoanTokens in same array we currently are
   
 #### TrueFiStrategy
 * allows transferring idle funds into defi opportunities
 * withdraw idle funds, deposit into defi opportunity, transfer tokens to pool
 * move funds out of opportunity when borrowers withdraw
   
-#### TrueRatingAgency
-* Applications now show the set of tokens a borrower is withdrawing
-  
 ### Liquidator
 * In liquidate function, check LoanToken asset type, transfer slashed TRU to respective pool
+* Support multiple price feeds for Liquidator
+* Governance decides what pools liquidator can track
   
 ### TrueFiGauge & Updated Incentives
 * Create a TrueFiGauge smart contract which will replace the existing tfTUSD farm
@@ -125,7 +136,5 @@ TrueLender now has the following attributes
   
 ## Questions:
 - How to deal with liquidations in multi asset borrowing?
-- How to allocate incentives for multiple pools?
 - Do we assume all stablecoins are worth $1 or use chainlink?
-
-
+- How to deal with difference in Strategy farmed coins vs asset
