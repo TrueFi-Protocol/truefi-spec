@@ -65,6 +65,76 @@ Differences from Compound include:
 * Governance will be the timelock admin
 
 # Phase 2
-
-Phase 2 will focus on overhauling how uncollateralized lending works in TrueFi. Rather than having TRU stakers approve individual loans, TRU holders will be able to stake on individual lines of credit. Each borrower will be able to use their line of credit to borrow from the TrueFi pool. A credit model will be voted in by governance which calculates the credit limit and risk factors for each borrower. Tokenized, fixed term, fixed interest loans will still be available, but will automatically calculate the loan terms depending on the credit model and pool liquidity.
-
+  
+## SUMMARY:
+Phase 2 will focus on overhauling how uncollateralized lending works in TrueFi.
+  
+The first major upgrade will introduce multi-asset borrowing and liquidity pools for multiple assets. A new asset pool is created by passing an ERC20 token to a factory. This factory will deploy a new pool, and allow the TrueLender contract to borrow directly from this pool. LoanTokens can now support any ERC20 token and borrowers will repay the borrowed asset to the LoanToken contract when a loan term is completed. Each pool will have its own strategy for lending idle assets to other defi protocols to maximize yield.
+  
+Open term lending with lines of credit will be allowed for borrowers. TRU stakers will be able to allocate stake oton individual lines of credit to increase the credit available. Each borrower will be able to use their line of credit to borrow from the TrueFi pool. A credit model will be voted in by governance which calculates the credit limit and risk factors for each borrower. Tokenized, fixed term, fixed interest loans will still be available, but will automatically calculate the loan terms depending on borrower credit and pool liquidity.
+  
+## MULTI-ASSET BORROWING
+  
+- Create lending pools for any ERC20 token.
+- Borrowers can apply to borrow one asset at a time
+  
+### Smart Contracts
+  
+#### TrueFiPoolFactory
+* owner can update a whitelist which allows certain tokens
+* new function: create(address token)
+* create() deploys a new TrueFiPool
+* create() registers new pool address
+* create() can only create one pool per ERC20 token
+* create() defaults to using no TrueFiStrategy
+* public mapping of token address => pool address
+* support precision of new tokens
+* pool value is denominated in tokens (1.01 price = 1.01 ETH)
+* ability to add price feed
+  
+#### TrueFiPool & TrueFiStrategy
+* Pools will now include a TrueFiStrategy smart contract
+* TrueFiStrategy is allowed to store idle funds in other defi contracts
+* Pools all use liquidExit() as calculated the same way
+* Use governance to add pools to the full TrueFi system
+* Use governance to set TrueFiStrategy for a given pool
+  
+#### TrueLender
+* withdraw from any TrueFi pool
+* each loan has a single asset
+* reclaim() transfers asset back to its respective asset pool
+* TrueLender handles liquidations and transfers TRU to the asset pool a default occurred in
+* Need a mapping (address => parameters) to track lending params
+* register() function which sets up a new pool with default params
+* need to calculate the amount of votes differently
+  
+#### LoanToken
+* each LoanToken has a stored asset() that returns address of ERC20 borrowed
+* call repay() to automatically pay back the loan with asset
+* burning LoanTokens returns asset
+* support precision of new tokens
+  
+#### TrueRatingAgency
+* LoanTokens are created for specific assets and registered with TrueRatingAgency
+* Keep incentives the same for rating any loan
+* Store LoanTokens in same array we currently are
+  
+#### TrueFiStrategy
+* allows transferring idle funds into defi opportunities
+* withdraw idle funds, deposit into defi opportunity, transfer tokens to pool
+* move funds out of opportunity when borrowers withdraw
+  
+### Liquidator
+* In liquidate function, check LoanToken asset type, transfer slashed TRU to respective pool
+* Support multiple price feeds for Liquidator
+* Governance decides what pools liquidator can track
+  
+### TrueFiGauge & Updated Incentives
+* Create a TrueFiGauge smart contract which will replace the existing tfTUSD farm
+* Any valid lp token can be staked here. Each valid pool is assigned a weight, and distribution is weighted based on governance allocation of weights. At first all pools will be weighted equally.
+* All current tfLP farm incentives will be migrated to the TrueFi gauge
+  
+## Questions:
+- How to deal with liquidations in multi asset borrowing?
+- Do we assume all stablecoins are worth $1 or use chainlink?
+- How to deal with difference in Strategy farmed coins vs asset
