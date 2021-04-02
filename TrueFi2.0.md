@@ -133,8 +133,3 @@ Open term lending with lines of credit will be allowed for borrowers. TRU staker
 * Create a TrueFiGauge smart contract which will replace the existing tfTUSD farm
 * Any valid lp token can be staked here. Each valid pool is assigned a weight, and distribution is weighted based on governance allocation of weights. At first all pools will be weighted equally.
 * All current tfLP farm incentives will be migrated to the TrueFi gauge
-  
-## Questions:
-- How to deal with liquidations in multi asset borrowing?
-- Do we assume all stablecoins are worth $1 or use chainlink?
-- How to deal with difference in Strategy farmed coins vs asset
