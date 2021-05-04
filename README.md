@@ -2,7 +2,7 @@
 
 [TrueFi 2.0 Specification](TrueFi2.0.md)
 
-TrueFi is a protocol for creating interest bearing pools with a high APR for liquidity providers. TrueFi includes a utility and rewards mechanisms using TrustTokens (TRU) and rewards participants for maintaining stable, high APRs. Un-collateralized loans and decentralized lending are utilized in order to achieve high interest rates for pools.
+TrueFi is a protocol for creating interest bearing pools with a high APR for liquidity providers. TrueFi includes a utility and rewards mechanisms using TrueFi tokens (TRU) and rewards participants for maintaining stable, high APRs. Un-collateralized loans and decentralized lending are utilized in order to achieve high interest rates for pools.
 
 TrueFi is a product that we are actively designing and this document is intended to act as a plan and specification for design. TrueFi is being developed by [TrustLabs](https://www.trusttoken.com/) in partnership with [EthWorks](https://ethworks.io/). TrueFi is aiming to be released on Ethereum mainnet November 21st 2020.
 
@@ -14,7 +14,7 @@ TrueFi is a product that we are actively designing and this document is intended
 **Pool** - A smart contract which allows accounts to pool tokens with the goal of earning interest.  
 **Deposit Tokens** - Tokens deposited into a pool which are used to earn interest through lending or arbitrage opportunities.  
 **Pool Tokens** - Tokens issued by a pool to represent share in the pool's deposit tokens.  
-**TrustToken** - An ERC20 token used to provide utility in the TrueFi ecosystem.  
+**TrueFi Token** - An ERC20 token used to provide utility in the TrueFi ecosystem.  
 **TrueUSD** - A stablecoin used frequently in TrueFi to provide liquidity.  
 **Prediction Market** - Exchange-traded market created for the purpose of trading the outcome of events.
 
@@ -28,7 +28,7 @@ TrueFi consists of four major pieces:
 1. Tokenized Loans  
 2. Lending Pools  
 3. Credit Prediction Market  
-4. TrustToken (TRU)  
+4. TrueFi Token (TRU)  
 
 ### Tokenized Loans (LoanToken)
 
