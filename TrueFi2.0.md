@@ -14,7 +14,7 @@ TrueFi v2 is a series of upgrades to the original TrueFi specification. These up
  
 # Phase 2
  
-Phase 1 will focus on value accrual for TRU holders and protocol governance. This phase will include a staking and governance smart contract. In this phase ownership of TrueFi will be transferred from the current multisig contract to a timelock contract. The staking contract will allow TRU holders to stake TRU to earn a share of loan origination fees.
+Phase 2 will focus on value accrual for TRU holders and protocol governance. This phase will include a staking and governance smart contract. In this phase ownership of TrueFi will be transferred from the current multisig contract to a timelock contract. The staking contract will allow TRU holders to stake TRU to earn a share of loan origination fees.
  
 ## Staking
  
@@ -67,7 +67,7 @@ Differences from Compound include:
 # Phase 3
   
 ## SUMMARY:
-Phase 2 will focus on overhauling how uncollateralized lending works in TrueFi.
+Phase 3 will focus on overhauling how uncollateralized lending works in TrueFi.
   
 The first major upgrade will introduce multi-asset borrowing and liquidity pools for multiple assets. A new asset pool is created by passing an ERC20 token to a factory. This factory will deploy a new pool, and allow the TrueLender contract to borrow directly from this pool. LoanTokens can now support any ERC20 token and borrowers will repay the borrowed asset to the LoanToken contract when a loan term is completed. Each pool will have its own strategy for lending idle assets to other defi protocols to maximize yield.
   
