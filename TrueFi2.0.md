@@ -2,7 +2,7 @@
  
 TrueFi v2 is a series of upgrades to the original TrueFi specification. These upgrades improve and overhaul the TrueFi lending product, and focus on value accrual, decentralization, and automation. As the TrueFi roadmap is developed, upgrades will be made in phases synchronized with unlocked tokens entering circulation.
   
-[Original Specification](README.md)
+[Original Specification (Phase 1)](README.md)
   
 ### Terminology
 
@@ -12,7 +12,7 @@ TrueFi v2 is a series of upgrades to the original TrueFi specification. These up
 **Liquidity Provider** - A party which provides liquidity to the TrueFi lending pool.  
 **TRU Governance** - Decentralized voting using TRU to adjust protocol parameters and make upgrades.  
  
-# Phase 1
+# Phase 2
  
 Phase 1 will focus on value accrual for TRU holders and protocol governance. This phase will include a staking and governance smart contract. In this phase ownership of TrueFi will be transferred from the current multisig contract to a timelock contract. The staking contract will allow TRU holders to stake TRU to earn a share of loan origination fees.
  
@@ -64,7 +64,7 @@ Differences from Compound include:
 * Guardian can be set to 0 through governance vote
 * Governance will be the timelock admin
 
-# Phase 2
+# Phase 3
   
 ## SUMMARY:
 Phase 2 will focus on overhauling how uncollateralized lending works in TrueFi.
