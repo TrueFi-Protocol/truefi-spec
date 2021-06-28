@@ -133,3 +133,100 @@ Open term lending with lines of credit will be allowed for borrowers. TRU staker
 * Create a TrueFiGauge smart contract which will replace the existing tfTUSD farm
 * Any valid lp token can be staked here. Each valid pool is assigned a weight, and distribution is weighted based on governance allocation of weights. At first all pools will be weighted equally.
 * All current tfLP farm incentives will be migrated to the TrueFi gauge
+
+# Phase 4
+
+Phase 4 overhauls handling defaults and adds automatic interest rate pricing for borrowers. This phase is the most significant update for TrueFi and will likely be what the protocol looks like in the long term.
+
+## SAFU (Secure Asset Fund for Users)
+
+The SAFU is an overhaul for how TrueFi handles borrower defaults. In Phase 4, the SAFU contract is responsible for all bad debt accrued by the protocol. When a default occurs, TrueFi Lending Pools transfer all of the bad debt assets to the SAFU in exchange for the full expected value of those assets. The SAFU owns a pool of funds that are liquidated first in the case of a loan default. The SAFU is also responsible for slashing staked TRU tokens if its balance is not enough to cover a single default event.
+
+### Handling Defaults
+
+In event of a default, the following occurs:
+
+1. The protocol first attempts to compensate the Lending Pool using the current SAFU funds, for the amount of default, equal to principal amount plus full amount of expected interest (“Defaulted Amount”)  
+2. If the SAFU can not satisfy the Defaulted Amount:  
+    - Up to 10% of TRU is slashed from the staking pool and transferred to SAFU to cover the remaining amount  
+    - SAFU can sell TRU for the respective borrowed asset
+3. All LoanTokens for the defaulted loan are transferred from the Lending Pool to the SAFU  
+4. If the value of the SAFU plus the value of the slashed TRU (“Assurance Fund”) can not satisfy the Defaulted Amount:  
+    - The difference between the Defaulted Amount and the Assurance Fund is calculated (“Uncovered Amount”)  
+    - SAFU mints ERC-20 tokens representing claim for the Uncovered Amount (“Deficiency Claim”)  
+    - Lending Pool receives a Deficiency Claim for the Uncovered Amount assuming successful recovery (i.e. Defaulted Amount minus Covered Amount)  
+    - Lending Pool has a first priority claim on funds recouped through arbitration for the Deficiency Claim amount
+5. If a debt is repaid:  
+    - The recouped funds will be used to purchase the asset that the Loan Token was originally denominated in, which will be transferred to the LoanToken contract  
+    - SAFU burns Loan Tokens for the underlying value of those tokens (“Recovered Amount”)  
+    - SAFU repurchases Deficiency Claim tokens from the Lending Pool up to the Recovered Amount  
+    - If there are additional recovered funds after repurchasing the Lending Pool’s Deficiency Claim, the SAFU keeps those remaining funds  
+6. If any portion of the original loan amount is not repaid after the completion of the legal recovery process  
+    - Lending Pool’s remaining Deficiency Claim tokens are repriced to 0 or burned (decrease LP price)  
+
+
+### Default Algorithm
+
+```
+Smart Contracts:
+    Liquidity Pool
+    Staking Pool
+    SAFU
+    LoanToken
+    StableCoin Token
+    TRU Token
+    DeficiencyToken
+    Arbitration
+
+Variables:
+    L = Expected Value of LoanToken in Liquidity Pool
+    P = Amount of Loan Value Repaid
+    S = StableCoin Balance in SAFU
+    D = Loan Deficit = L - P
+    R = Remaining USD Deficit
+    C = USD Coverage Requirement After SAFU Payment
+    T = Balance of TRU in Staking Pool
+    U = USD Price of TRU
+    K = Slash Ratio of Staking Pool
+    M = Max USD Staking Coverage = U * T * K
+    V = Total Supply (Expected Value) of LoanToken Contract
+    Y = Arbitration Repayment Amount
+    Z = Arbitration Completion Boolean | 1 = Complete, 0 = Pending
+
+Algorithm:
+    1. Transfer L LoanToken from Liquidity Pool to SAFU
+    2. Calculate Loan Deficit:
+       D = L - P
+    3. If S >= D : 
+       Cover the deficit using SAFU funds
+            a. Calculate R = 0
+            b. Transfer D StableCoin from SAFU to Liquidity Pool
+    4. If S < D :
+       SAFU funds are insufficient to cover, Slash TRU
+            a. Calculate Max Staking Coverage:
+               M = U * T * K
+            b. Calculate TRU Staking Coverage Requirement
+               C = D - S
+            c. If M >= C :
+                 i. Calculate R = 0
+                ii. Transfer (C / U) TRU from Staking Pool to SAFU
+            d. If M < C :
+                 i. Calculate R = D - S - M
+                ii. Transfer (K * T) TRU from Staking Pool to SAFU
+            e. Transfer (D - S) StableCoin from SAFU to Liquidity Pool
+    5. If (R > 0) :
+       Deficit is still not covered
+            a. Calculate D’ = R
+            b. Mint D’ DeficiencyToken
+            c. Transfer D’ DeficiencyToken to Liquidity Pool
+    6. If (Z == 1) :
+       Arbitration completes with Y StableCoin
+            a. Transfer Y StableCoin from Arbitration to LoanToken
+            b. SAFU burns L LoanToken for (V / T) * L StableCoin
+            c Liquidity Pool burns D’ DeficiencyToken for D’ StableCoin
+
+```
+  
+### Smart Contract Architecture
+  
+SAFU will effectively replace what was called “Liquidator”. SAFU will have the permission to slash TRU according to the above algorithm. Funds in the SAFU will be managed by an approved address, automating as much capital management as possible through defi. The initial version of SAFU funds management will be somewhat centralized. Allowing centralized management of SAFU funds is useful in order to maximize the capital efficiency when making exchanges between tokens. For example, the price impact of exchanging TRU on decentralized exchanges is much higher than the impact of OTC or centralized exchange opportunities. In following the ethos of progressive decentralization, future phases will include updates to the SAFU which remove the dependency on centralized parties to manage SAFU funds.
