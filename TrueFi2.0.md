@@ -215,6 +215,142 @@ Algorithm:
         c. Subtract D’ deficiency value from loanDeficiency mapping and poolDeficiency mapping
 ```
   
-### Smart Contract Architecture
+### SAFU Smart Contract Architecture
   
 SAFU will effectively replace what was called “Liquidator”. SAFU will have the permission to slash TRU according to the above algorithm. Funds in the SAFU will be managed by an approved address, automating as much capital management as possible through defi. The initial version of SAFU funds management will be somewhat centralized. Allowing centralized management of SAFU funds is useful in order to maximize the capital efficiency when making exchanges between tokens. For example, the price impact of exchanging TRU on decentralized exchanges is much higher than the impact of OTC or centralized exchange opportunities. In following the ethos of progressive decentralization, future phases will include updates to the SAFU which remove the dependency on centralized parties to manage SAFU funds.
+
+## Lines of Credit
+
+Lines of Credit (LOC) is a major step for automating lending and interest rate calculation in TrueFi. In this upgrade, borrowers with high enough credit scores will be able to open a line of credit with a credit limit. This will allow a borrower to withdraw and repay debt at any time with a variable rate rather than submitting requests for fixed term loans. Lines of credit and term loans are funded from the same liquidity pools and each have their own token representing unique risk and attributes. Interest rates will be calculated automatically for fixed and variable term loans based on the Credit Oracle.
+
+### Mitigating Risk
+
+It’s important to take measures which protect lenders from downside. In addition, Line of Credit mechanisms need to be future-proof and flexible to support future changes such as new models or inputs. This current design assumes that a TrueFi credit score is the most important factor in calculating borrower credit limits and risk. Therefore, it is critical to calculate and closely monitor these scores as a more decentralized solution is built.
+
+Some centralized steps to lower risk include:
+- Regular check-ins on borrower health
+- Ability to reduce borrowers’ credit limits at any time
+- Borrower agreement legal covenants
+- Only allow “high-quality” borrowers with high credit scores access to Credit Lines
+
+Some of the main risks associated with Lines of Credit include:
+- Borrowers’ creditworthiness is changing in real-time depending on their trading positions
+- Market volatility
+- Lack of real-time credit monitoring
+- Borrowers attempting to withdraw funds quickly to cover positions elsewhere
+
+#### Loan Term
+
+Reduced term is instituted in order to lower risk by requiring borrowers with a line of credit to repay their full balance every term and establish repayment history. The term for lines of credit in TrueFi will be 365 days, starting when the line of credit request is approved. This number can be increased as stability of the product is established.
+
+### Interest Rates Overview
+
+Interest rates will be calculated automatically based on a set of inputs including borrower credit scores. Borrowers will have the ability to take out loans calculated on a fixed term, fixed interest basis and a line of credit which is variable term, variable interest. Interest accrues on a per-block basis, increasing the virtual price of a lending pool as profit is realized.
+
+Interest for lines of credit accumulates per block on the principal borrow based on the variable rate. Borrowers utilizing lines of credit are required to pay the interest balance every 30 days.
+
+##### Borrow Limit
+
+Credit limits and borrower scores are calculated off-chain and written to a smart contract. Borrow limits are calculated based on a credit limit and credit score. Limits are adjusted by a multisig and written to a smart contract. Limits must be calculated off-chain in order to keep borrower information private.
+
+A borrower cannot borrow more than 15% from any pool or more than their remaining credit limit. This is to both limit the risk of a single borrower defaulting in any pool, and manage the maximum amount a default can affect the entire protocol.
+
+A max_borrow_limit and credit_score for each borrower are written by a multisig and stored on-chain. An adjustment_ratio is calculated which decides how much to reduce credit limits for borrowers with lower scores. For each borrower, their credit_limit is calculated by multiplying max_credit_limit * adjustment ratio.
+
+Finally we calculate a pool_borrow_max, which represents the maximum a borrower can borrow from a single pool. Each borrower will have its own maximum borrow from each pool. A borrower cannot borrow more than their remaining credit limit or 15% of a single pool.
+
+#### Borrow Rates
+
+Borrow rates for fixed and variable term loans are calculated on-chain. Starting with a base rate collected from the Aave and Compound markets, rates are adjusted based on utilization and credit scores. Higher utilization in a lending pool causes higher interest rates to borrow based on a double kinked model. Score adjustment uses a single kinked model. Adjusting the kinks for the utilization adjustment can allow for targeting certain utilizations in lending pools.
+
+The final_rate is equal to the base adjusted for utilization and credit score. We start with a base_rate which is a secured_rate + risk_premium. The secured_rate is the average 7 day borrowing rate for the Aave USDC market. The risk_premium is a value set by a multisig representing a premium for uncollateralized lending.
+
+Once the base rate is calculated, we then perform some calculations per pool, and per borrower, to adjust for pool utilization and credit scores. The general idea of these calculations is to incentivise borrowing from pools with low utilization, and punish borrowers with low credit scores.
+
+The utilization_adjustment is a formula which increases the interest rate for a specific pool. Pools with utilization above 50% have an increasing rate. Utilizations below 50% have a minimum effect on interest rates. Pools with utilization above 80% have a rapidly increasing rate.
+
+The credit_adjustment is a formula which increases the interest rate for borrowers with low credit. Having the highest credit score (255) will give you a 0% increase in interest rates. Then, every point lower than 255, interest rates increase by a small percentage. Borrowers with a score below 159 have a major increase in interest rates.
+
+Once all these values are calculated, we can get the final rate:
+
+final_rate = base_rate + utilization_adjustment + credit_adjustment
+
+#### Stable Borrowing
+
+Rates for fixed-term loans are calculated using the stable borrow rate. The stable rate is the final rate adjusted based on the term length of a loan.
+
+We add to the final_rate a time_adjustment, which increases the interest rate for stable borrowing by 1% per 30 days. We then calculate the stable rate:
+
+stable_rate = final_rate + time_adjustment
+
+#### Handling Deficiency in Lines of Credit
+
+If a borrower’s limit is dropped and they owe more than their limit, they will be given a cure period to repay their balance to below their new credit limit. If a borrower cannot repay, The SAFU will attempt to purchase the debt tokens from the lending pool in the same way it would with fixed-term loans. (see: SAFU Specification)
+
+### Interest Rates Calculations
+
+In order to calculate interest rates on Ethereum, every time an input to an interest rate equation changes, the interest amount owed to lenders needs to be re-calculated. For a protocol such as Aave, this is straightforward, since every borrower in an Aave pool pays the same interest rate. For TrueFi, where interest rates vary between borrowers, this calculation becomes slightly more complicated. Therefore, TrueFi Pools will keep track of 2 types of interest for Lines Of Credit:
+
+- A base rate paid by all variable rate borrowers
+- A total rate per-borrower
+
+##### Borrow Limit
+
+Credit limits and borrower scores are calculated off-chain and written to a smart contract. Borrow limits are calculated based on a credit limit and credit score. A borrower cannot borrow more than 15% from the TVL of all pools or more than their max borrow limit (after adjusting for credit score).
+
+```
+max_borrower_limit = [written on-chain by multisig]
+
+max_pool_limit = 0.15 * truefi_tvl
+
+credit_limit = min(max_borrower_limit, max_pool_limit) * limit_adjustment
+
+limit_adjustment = borrower_score < score_floor ? 0 : (borrower_score/MAX_CREDIT_SCORE)^limit_adjustment_power
+
+    score_floor = 40
+    MAX_CREDIT_SCORE = 255
+    limit_adjudtment_power = 0.75
+
+pool_borrow_max = min(0.15 * pool_value, credit_limit)
+
+remaining_credit_limit = pool_borrow_max - total_borrow
+```
+
+#### Borrow Rates
+
+Starting with a base rate, rates are adjusted based on utilization and credit scores. Higher utilization in a lending pool causes higher interest rates to borrow based on an inverse power model. Score adjustment uses an inverse power model.
+
+```
+risk_premium = [value set by governance]
+
+secured_rate = [returned by credit oracle]
+
+base_rate = secured_rate + risk_premium
+
+final_rate = min(rate_ceiling, base_rate + utilization_adjustment + credit_adjustment)
+
+    rate_ceiling = 500.0%
+
+utilization_adjustment = utilization_adjustment_coefficient * (1/(pool_liquid_ratio)^utilization_adjustment_power - 1)
+
+    utilization_adjustment_coefficient = 0.50%
+    utilization_adjustment_power = 2
+
+credit_adjustment = credit_adjustment_coefficient * ((MAX_CREDIT_SCORE/borrower_score)^credit_adjustment_power - 1)
+
+    MAX_CREDIT_SCORE = 255
+    creditAdjustment_coefficient = 10.00%
+    credit_adjustment_power = 1
+```
+
+#### Stable Borrowing
+
+Rates for fixed-term loans are calculated using the stable borrow rate. A stability adjustment is added to incentivise borrowers to take out shorter term loans.
+
+```
+fixed_loans_ratio = % of pool in fixed-term loans
+
+stability_adjustment = (0.005 * months)
+
+stable_rate = final_rate + stability_adjustment
+```
