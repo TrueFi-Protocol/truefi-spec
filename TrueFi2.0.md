@@ -71,8 +71,6 @@ Phase 3 will focus on overhauling how uncollateralized lending works in TrueFi.
   
 The first major upgrade will introduce multi-asset borrowing and liquidity pools for multiple assets. A new asset pool is created by passing an ERC20 token to a factory. This factory will deploy a new pool, and allow the TrueLender contract to borrow directly from this pool. LoanTokens can now support any ERC20 token and borrowers will repay the borrowed asset to the LoanToken contract when a loan term is completed. Each pool will have its own strategy for lending idle assets to other defi protocols to maximize yield.
   
-Open term lending with lines of credit will be allowed for borrowers. TRU stakers will be able to allocate stake oton individual lines of credit to increase the credit available. Each borrower will be able to use their line of credit to borrow from the TrueFi pool. A credit model will be voted in by governance which calculates the credit limit and risk factors for each borrower. Tokenized, fixed term, fixed interest loans will still be available, but will automatically calculate the loan terms depending on borrower credit and pool liquidity.
-  
 ## MULTI-ASSET BORROWING
   
 - Create lending pools for any ERC20 token.
@@ -129,14 +127,12 @@ Open term lending with lines of credit will be allowed for borrowers. TRU staker
 * Support multiple price feeds for Liquidator
 * Governance decides what pools liquidator can track
   
-### TrueFiGauge & Updated Incentives
-* Create a TrueFiGauge smart contract which will replace the existing tfTUSD farm
-* Any valid lp token can be staked here. Each valid pool is assigned a weight, and distribution is weighted based on governance allocation of weights. At first all pools will be weighted equally.
-* All current tfLP farm incentives will be migrated to the TrueFi gauge
-
 # Phase 4
 
-Phase 4 overhauls handling defaults and adds automatic interest rate pricing for borrowers. This phase is the most significant update for TrueFi and will likely be what the protocol looks like in the long term.
+Phase 4 overhauls handling defaults and adds automatic interest rate pricing for borrowers. This phase is the most significant update for TrueFi and will likely be what the protocol looks like in the long term. Phase 4 also moves all farming to a single Liquidity Gauge contract to handle scaling farms in TrueFi.
+
+## Liquidity Gauge
+A smart contract will launch which will replace the existing tfLP farms. Any valid tfLP token can be staked here. Each valid pool is assigned a weight, and distribution is weighted based on governance allocation of weights. At first all pools will be weighted equally. All current tfLP farm incentives will be migrated to the Liquidity Gauge. In this phase, snapshot votes will decide the allocation points, and a single weekly distribution of TRU for all farms. This model greatly simplifies farming TRU and scales for any number of assets.
 
 ## SAFU (Secure Asset Fund for Users)
 
@@ -242,6 +238,12 @@ Some of the main risks associated with Lines of Credit include:
 #### Loan Term
 
 Reduced term is instituted in order to lower risk by requiring borrowers with a line of credit to repay their full balance every term and establish repayment history. The term for lines of credit in TrueFi will be 365 days, starting when the line of credit request is approved. This number can be increased as stability of the product is established.
+
+### Credit Oracle
+
+A smart contract is utilized as an oracle which returns credit scores, borrow limits, and borrow eiligibility. Until credit scores are automated in a trustless way, these parameters will be written by a manager to the smart contract. This way, accurate and effective scores can be implemented now, and in the future the same interface & contract can be used to provide trustless borrower data. 
+
+Borrowers that are "on hold" are temporarily suspended from borrowing from TrueFi. Any borrower that does not have their score updated within 30 days or misses a 30 day payment will automatically be put on hold. Borrowers can be marked as "ineligible" by the contract owner, and ineligible borrowers will not be able to borrow from TrueFi. Borrowers marked as ineligible will be open to enter technical default once marked.
 
 ### Interest Rates Overview
 
