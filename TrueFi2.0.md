@@ -352,7 +352,9 @@ Rates for fixed-term loans are calculated using the stable borrow rate. A stabil
 ```
 fixed_loans_ratio = % of pool in fixed-term loans
 
-stability_adjustment = (0.005 * months)
+stability_adjustment_coefficient = [value set by governance]
+
+stability_adjustment = (term / 30) * stability_adjustment_coefficient
 
 stable_rate = final_rate + stability_adjustment
 ```
