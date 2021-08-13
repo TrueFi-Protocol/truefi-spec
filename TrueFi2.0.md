@@ -136,7 +136,7 @@ A smart contract will launch which will replace the existing tfLP farms. Any val
 
 ## SAFU (Secure Asset Fund for Users)
 
-The SAFU is an overhaul of how TrueFi handles borrower defaults. In Phase 4, the SAFU contract is responsible for all bad debt accrued by the protocol. The SAFU can be funded by external parties (in this case, TrustToken) and will use its funds to help cover defaults. When a default occurs, TrueFi Lending Pools transfer all bad debt assets to the SAFU in exchange for the full expected value of those assets. The SAFU is responsible for slashing staked TRU tokens, up to 10% of the defaulted amount. If the value of these tokens is not enough to cover the default the SAFU can use its own funds to help repay the lending pool for lost funds.
+The SAFU is an overhaul of how TrueFi handles borrower defaults. In Phase 4, the SAFU contract is responsible for all bad debt accrued by the protocol. The SAFU can be funded by external parties and will use its funds to help cover defaults. When a default occurs, TrueFi Lending Pools transfer all bad debt assets to the SAFU in exchange for the full expected value of those assets. The SAFU is responsible for slashing staked TRU tokens, up to 10% of the defaulted amount. If the value of these tokens is not enough to cover the default the SAFU can use its own funds to help repay the lending pool for lost funds.
 
 ### Handling Defaults
   
