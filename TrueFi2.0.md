@@ -350,11 +350,11 @@ credit_adjustment = credit_adjustment_coefficient * ((MAX_CREDIT_SCORE/borrower_
 Rates for fixed-term loans are calculated using the stable borrow rate. A stability adjustment is added to incentivise borrowers to take out shorter term loans.
 
 ```
-fixed_loans_ratio = % of pool in fixed-term loans
+term_days = term length in days
 
 stability_adjustment_coefficient = [value set by governance]
 
-stability_adjustment = (term / 30) * stability_adjustment_coefficient
+stability_adjustment = (term_days / 30) * stability_adjustment_coefficient
 
 stable_rate = final_rate + stability_adjustment
 ```
