@@ -131,7 +131,7 @@ The first major upgrade will introduce multi-asset borrowing and liquidity pools
 
 Phase 4 overhauls handling defaults and adds automatic interest rate pricing for borrowers. This phase is the most significant update for TrueFi and will likely be what the protocol looks like in the long term. Phase 4 also moves all farming to a single Liquidity Gauge contract to handle scaling farms in TrueFi.
 
-## Liquidity Gauge
+## Liquidity Gauge / TrueMultiFarm
 A smart contract will launch which will replace the existing tfLP farms. Any valid tfLP token can be staked here. Each valid pool is assigned a weight, and distribution is weighted based on governance allocation of weights. At first all pools will be weighted equally. All current tfLP farm incentives will be migrated to the Liquidity Gauge. In this phase, snapshot votes will decide the allocation points, and a single weekly distribution of TRU for all farms. This model greatly simplifies farming TRU and scales for any number of assets.
 
 ## SAFU (Secure Asset Fund for Users)
@@ -263,7 +263,7 @@ Finally we calculate a pool_borrow_max, which represents the maximum a borrower 
 
 #### Borrow Rates
 
-Borrow rates for fixed and variable term loans are calculated on-chain. Starting with a base rate collected from the Aave and Compound markets, rates are adjusted based on utilization and credit scores. Higher utilization in a lending pool causes higher interest rates to borrow based on a double kinked model. Score adjustment uses a single kinked model. Adjusting the kinks for the utilization adjustment can allow for targeting certain utilizations in lending pools.
+Borrow rates for fixed and variable term loans are calculated on-chain. Starting with a base rate collected from the Aave and Compound markets, rates are adjusted based on utilization and credit scores. A lower credit score causes higher interest rates to borrow, as do higher pool utilizations. These adjustments are based on inverse power function models with tunable parameters. Parameter tuning can allow for targeting particular creditworthy borrowers or pool utilization levels.
 
 The final_rate is equal to the base adjusted for utilization and credit score. We start with a base_rate which is a secured_rate + risk_premium. The secured_rate is the average 7 day borrowing rate for the Aave USDC market. The risk_premium is a value set by a multisig representing a premium for uncollateralized lending.
 
