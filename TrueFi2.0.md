@@ -294,9 +294,13 @@ If a borrower’s limit is dropped and they owe more than their limit, they will
 In order to calculate interest rates on Ethereum, every time an input to an interest rate equation changes, the interest amount owed to lenders needs to be re-calculated. For a protocol such as Aave, this is straightforward, since every borrower in an Aave pool pays the same interest rate. For TrueFi, where interest rates vary between borrowers, this calculation becomes slightly more complicated. Therefore, TrueFi Pools will keep track of 2 types of interest for Lines Of Credit:
 
 - A base rate paid by all variable rate borrowers
-- A total rate per-borrower
+- A rate per-borrower (see buckets section below)
 
-##### Borrow Limit
+#### Buckets
+
+Buckets are a solution designed to make lines of credit scalable. Every borrower is placed in a "bucket" consisting of all the possible credit scores. Credit scores are stored in the oracle as a uint8, which means the range of credit scores are 0-255. In order to be able to efficiently calculate the scores for a high number of borrowers, borrowers are grouped based on their score. When a change is made to utilization or rates, that change is applied to all borrowers with the same score. Thus, if 3 borrowers have a score of 192, all 3 borrower interest rates can be updated at the same time instead of updating 3 different scores.
+
+#### Borrow Limit
 
 Credit limits and borrower scores are calculated off-chain and written to a smart contract. Borrow limits are calculated based on a credit limit and credit score. A borrower cannot borrow more than 15% from the TVL of all pools or more than their max borrow limit (after adjusting for credit score).
 
@@ -358,3 +362,29 @@ stability_adjustment = (term_days / 30) * stability_adjustment_coefficient
 
 stable_rate = final_rate + stability_adjustment
 ```
+
+# Phase 5
+
+Phase 5 will mainly focus on improving lines of credit. This phase also includes some smaller changes to token distribution and governance. The phase 4 version of lines of credit we will refer to as a "pilot" or LOC v0. This version will be launched with an initial set of borrowers (or one borrower) in order to test the feature and get feedback.
+
+We will refer to Lines of Credit as "LOC" and Fixed Term Loans as "FTL". The difference between the two is LOC allow borrowers to borrow at any time, up to their limit, as tracked in a smart contract. FTL allow borrowers to create discrete, tokenized loans with a fixed term and fixed interest rate.
+
+## Lines of Credit v1
+
+LOC v1 is not only an overhaul of lines of credit, but also an overhaul of how fixed term loans (FTL) function.
+
+### Automatic Caulcation of Borrow Rates
+
+The main feature of Phase 5 is that all interest rates will be calcuated automatically. At the time of drawing down a line of credit, a borrower will be bucketed
+
+### Handling Defaults for LOC & FTL
+
+### Smart Contract Design
+
+#### BorrowMutex
+
+BorrowMutex is a smart contract designed to restrict which products (LOC, FTL) a borrower can use. A borrower can choose between either a line of credit (LOC), or a fixed-term loan (FTL). The mutex tracks which product a borrower is using, and restricts the borrower from using the other product if they are already using one.
+
+#### DebtToken
+
+DebtToken
