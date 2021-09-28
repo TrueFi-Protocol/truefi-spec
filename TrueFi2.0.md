@@ -138,7 +138,7 @@ A smart contract will launch which will replace the existing tfLP farms. Any val
 
 The SAFU is an overhaul of how TrueFi handles borrower defaults. In Phase 4, the SAFU contract is responsible for all bad debt accrued by the protocol. The SAFU can be funded by external parties and will use its funds to help cover defaults. When a default occurs, TrueFi Lending Pools transfer all bad debt assets to the SAFU in exchange for the full expected value of those assets. The SAFU is responsible for slashing staked TRU tokens, up to 10% of the defaulted amount. If the value of these tokens is not enough to cover the default the SAFU can use its own funds to help repay the lending pool for lost funds.
 
-### Handling Defaults
+### Handling Defaults for Fixed Term Loans
   
 In the event of a default, the following occurs:  
 1. Up to 10% of TRU is slashed from the staking pool and transferred to SAFU to cover the amount of default, equal to principal amount plus full amount of expected interest (“Defaulted Amount”)  
@@ -375,16 +375,39 @@ LOC v1 is not only an overhaul of lines of credit, but also an overhaul of how f
 
 ### Automatic Caulcation of Borrow Rates
 
-The main feature of Phase 5 is that all interest rates will be calcuated automatically. At the time of drawing down a line of credit, a borrower will be bucketed
+The main feature of Phase 5 is that all interest rates will be calcuated automatically. At the time of drawing down a line of credit, a borrower will be bucketed with other borrwers that have the same score. The smart contract called Rate Adjuster calculates the interest rates for both LOC and FTL.  
 
-### Handling Defaults for LOC & FTL
+### Handling Defaults for Lines of Credit
+
+Handling defauls for LOC is similar to fixed term loans with a few changes.
+  
+In the event of a LOC default, the following occurs:  
+1. Up to 10% of TRU is slashed from the staking pool and transferred to SAFU to cover the amount of default, equal to principal amount plus full amount of expected interest (“Defaulted Amount”)  
+2. If the current SAFU funds are insufficient to cover the Defaulted Amount:
+    - SAFU can sell TRU for the respective borrowed asset at its manager’s discretion  
+3. If the value of the SAFU funds(“Assurance Fund”) can not satisfy the Defaulted Amount:  
+    - The difference between the Defaulted Amount and the Assurance Fund is calculated (“Uncovered Amount”)  
+    - SAFU mints ERC-20 tokens representing claim for the Uncovered Amount (“Deficiency Claim”)  
+    - Lending Pool receives a Deficiency Claim for the Uncovered Amount assuming successful recovery  
+    - Lending Pool has a first priority claim on funds recouped through arbitration for the Deficiency Claim amount  
+4. If a debt is repaid:  
+    - The recouped funds will be used to re-purchase Deficiency Claim tokens from the lending pool which the default occurs in   
+    - SAFU repurchases Deficiency Claim tokens from the Lending Pool up to the Recovered Amount. Those tokens are burned by the Lending Pool  
+    - If there are additional recovered funds after repurchasing the Lending Pool’s Deficiency Claim, the SAFU keeps those remaining funds  
+5. If any portion of the original loan amount is not repaid after the completion of the legal recovery process:  
+    - Lending Pool’s remaining Deficiency Claim tokens are burned (decrease LP price)
+    - Losses are incurred in the Lending Pool    
 
 ### Smart Contract Design
 
+#### Rate Adjuster
+
+The Rate Adjuster module calculates interest rates for LOC and FTL. The adjuster works according to the Phase 4 specification for calculating interest rates, taking into account the borrow limit and credit scores for each borrower.  
+
 #### BorrowMutex
 
-BorrowMutex is a smart contract designed to restrict which products (LOC, FTL) a borrower can use. A borrower can choose between either a line of credit (LOC), or a fixed-term loan (FTL). The mutex tracks which product a borrower is using, and restricts the borrower from using the other product if they are already using one.
+BorrowMutex is a smart contract designed to restrict which products (LOC, FTL) a borrower can use. A borrower can choose between either a line of credit (LOC), or a fixed-term loan (FTL). The mutex tracks which product a borrower is using, and restricts the borrower from using the other product if they are already using one. A borrower can have one LOC per pool, or one FTL per pool. Between all pools, a borrwer can borrow up to their credit limit as calculated by the Rate Adjuster.  
 
-#### DebtToken
+#### DebtToken  
 
-DebtToken
+DebtToken is a token which represents a claim on future funds from the SAFU. DebtTokens are used as an accounting method for tracking bad debt owned by a lending pool. When a default occurs in FTL or LOC, DebtTokens are minted by the SAFU and transferred to the lending pool.  
