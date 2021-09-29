@@ -375,7 +375,7 @@ LOC v1 is not only an overhaul of lines of credit, but also an overhaul of how f
 
 ### Automatic Caulcation of Borrow Rates
 
-The main feature of Phase 5 is that all interest rates will be calcuated automatically. At the time of drawing down a line of credit, a borrower will be bucketed with other borrwers that have the same score. The smart contract called Rate Adjuster calculates the interest rates for both LOC and FTL.  
+The main feature of Phase 5 is that all interest rates will be calcuated automatically. At the time of drawing down a line of credit, a borrower will be bucketed with other borrwers that have the same score. The smart contract called Credit Model calculates the interest rates for both LOC and FTL.  
 
 ### Handling Defaults for Lines of Credit
 
@@ -400,13 +400,13 @@ In the event of a LOC default, the following occurs:
 
 ### Smart Contract Design
 
-#### Rate Adjuster
+#### Credit Model
 
-The Rate Adjuster module calculates interest rates for LOC and FTL. The adjuster works according to the Phase 4 specification for calculating interest rates, taking into account the borrow limit and credit scores for each borrower.  
+The Credit Model module calculates interest rates for LOC and FTL. The adjuster works according to the Phase 4 specification for calculating interest rates, taking into account the borrow limit and credit scores for each borrower.  
 
 #### BorrowMutex
 
-BorrowMutex is a smart contract designed to restrict which products (LOC, FTL) a borrower can use. A borrower can choose between either a line of credit (LOC), or a fixed-term loan (FTL). The mutex tracks which product a borrower is using, and restricts the borrower from using the other product if they are already using one. A borrower can have one LOC per pool, or one FTL per pool. Between all pools, a borrwer can borrow up to their credit limit as calculated by the Rate Adjuster.  
+BorrowMutex is a smart contract designed to restrict which products (LOC, FTL) a borrower can use. A borrower can choose between either a line of credit (LOC), or a fixed-term loan (FTL). The mutex tracks which product a borrower is using, and restricts the borrower from using the other product if they are already using one. A borrower can have one LOC per pool, or one FTL per pool. Between all pools, a borrwer can borrow up to their credit limit as calculated by the Credit Model.  
 
 #### DebtToken  
 
