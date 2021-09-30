@@ -406,7 +406,7 @@ The Credit Model module calculates interest rates for LOC and FTL. The adjuster 
 
 #### BorrowingMutex
 
-BorrowMutex is a smart contract designed to restrict which products (LOC, FTL) a borrower can use. A borrower can choose between either a line of credit (LOC), or a fixed-term loan (FTL). The mutex tracks which product a borrower is using, and restricts the borrower from using the other product if they are already using one. A borrower can have one LOC per pool, or one FTL per pool. Between all pools, a borrwer can borrow up to their credit limit as calculated by the Credit Model.  
+BorrowMutex is a smart contract designed to restrict which products (LOC, FTL) a borrower can use. A borrower can choose between either a line of credit (LOC), or a fixed-term loan (FTL). The mutex tracks which product a borrower is using, and restricts the borrower from using the other product if they are already using one. A borrower can have one LOC per pool, or one FTL (between all pools). A borrwer can borrow up to their credit limit as calculated by the Credit Model.  
 
 #### DebtToken  
 
