@@ -411,3 +411,81 @@ BorrowMutex is a smart contract designed to restrict which products (LOC, FTL) a
 #### DebtToken  
 
 DebtToken is a token which represents a claim on future funds from the SAFU. DebtTokens are used as an accounting method for tracking bad debt owned by a lending pool. When a default occurs in FTL or LOC, DebtTokens are minted by the SAFU and transferred to the lending pool.  
+
+## Borrower Staking
+
+One of the key drivers behind the demand for exchange tokens (BNB, FTT) is their ability to lower fees for traders and access opportunities on exchanges. Adding this type of use for TRU will create an incentive for borrowers to buy and lock TRU, thus driving demand and utility for the TRU token. Borrower staking adds the ability for borrowers to stake TRU in order to increase their credit limit and decrease their borrowing interest rates. Note that the "effective" credit score is not an indication of the borrower's credit worthiness rather it is an input used to drive rates and limits. 
+
+### Overview
+
+- Design TRU staking as general system that can enable future multi-asset staking on TrueFi  
+- Borrowers can reduce interest rates marginally by staking TRU  
+- Borrowers can stake TRU to expand credit limit by a percentage of staked value  
+
+### Implementation
+
+Interest rate calculations need to be refactored to include staking rates. The simplest way to accomplish this is by changing which bucket a borrower is placed into if they stake TRU. Because the staking system uses a “bucketing” technique for scalability, borrowers with the same score before staking TRU could have different scores after, thus breaking the buckets. Instead of calculating a new rate for a staked borrower, a new effective credit score is calculated for a staked borrower.  
+
+Note that a borrower’s credit score or borrow limit are not increased in the credit oracle, rather their “effective” credit score is used by the CreditModel smart contract to adjust the rates & limits internally. If a borrower has a perfect score, their rates cannot go lower since they will be in the highest bucket.  
+
+#### Credit Limit
+
+Credit limits are straightforward to adjust. An adjustment is added to a borrower’s credit limit based on the amount of TRU staked. The staked credit limit is calculated as follows:  
+
+```
+conservative_stake_value = ltv_ratio * oracle_price * staked_TRU
+```  
+
+The ltv_ratio is stored as a parameter initially set to 0.4. This means the borrower must stake additional debt over their previous limit by staking 40% TRU per dollar increase in their limit.  
+
+#### Credit Score and Interest Rates
+
+An adjustment is applied when borrowing to adjust the interest rate. This adjustment does not affect the oracle credit score, rather it affects the score bucket a borrower is placed into when creating a loan.  
+
+```
+staked_credit_adjustment = credit_adjustment(effective_score)
+
+effective_score = credit_score + conservative_stake_ratio^effective_score_power * (MAX_CREDIT_SCORE - credit_score)
+```  
+
+The variables credit_score and MAX_CREDIT_SCORE are treated the same as the base model. The effective_score_power variable will be set to 1, and must be greater than 0.  
+
+Conservative stake value is calculated as follows:  
+
+```
+conservative_stake_value = LTV_ratio * oracle_price * staked_TRU
+```   
+
+LTV ratio will be set initially to 40%. Oracle price is the 7 day average spot rate of TRU price as collected from the TRU ChainLink price oracle. staked_tru will be the amount of TRU staked by the borrower.  
+
+```
+conservative_stake_ratio = 
+min(100%, conservative_stake_value / borrow_amount)
+```  
+
+borrow_amount is the fixed term loan amount XOR LOC pro forma borrowed amount.  
+
+### Smart Contracts
+
+The CreditModel contract will need to keep track of how staking changes a borrower’s limit and score. A new contract will be added called StakingVault which holds TRU stake and keeps track of how much stake each borrower has.  
+
+#### StakingVault
+
+This contract will:
+- Allow borrowers to stake TRU  
+- Lock TRU for the duration of a borrower’s fixed-term loan  
+- Track how much TRU is locked for staked borrowers  
+- Prevent borrowers from withdrawing TRU if they are below their staked credit limit  
+- Allow SAFU to slash borrower TRU in case of a default  
+
+When a borrower creates a fixed term loan, the borrow() function looks to see if the borrower has stake in the StakingVault. Once the loan is created, borrowers cannot stake more TRU or withdraw the TRU staked at the time the loan is created.  
+
+For lines of credit, a borrower is automatically allowed to borrow based on their staked rate and limits. If the price of TRU falls, a borrower will have to add more stake or pay back a loan in order to avoid defaults. If a borrower is not meeting their staking requirements, the StakingVault will automatically prevent them from withdrawing further TRU.  
+
+#### CreditModel
+
+The CreditModel contract would look at the StakingVault contract to calculate rates & limits for staked borrowers. The logic for adjusting borrow limits and interest rate discounts for borrowers with staked TRU is stored in this contract.  
+
+#### SAFU and Defaults
+
+If any borrower enters default, the SAFU has permission to withdraw all the borrower’s TRU staked in the StakingVault. This TRU will be used as the first tranche to repay bad debt created after a default. If there is an edge case where the borrower has repaid their loan partially, TrueFi governance can decide to return TRU from the SAFU.  
